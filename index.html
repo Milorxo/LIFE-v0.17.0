@@ -2134,6 +2134,30 @@ body.dragging-now .dv-grip { cursor:grabbing; }
 .cal-cell.c-missed > * { opacity:1 !important; }
 .cal-cell.c-missed .c-skip { color:#ff8d8d; font-weight:600; letter-spacing:.06em; }
 @media (max-width:640px) { .cal-cell .c-bat b { display:none; } .cal-cell:has(.c-bat) .c-top { padding-right:20px; } .cal-cell .c-bat { top:5px; right:5px; } }
+/* v0.15.3 · day dashboard */
+.day-panel { width:min(480px, 100vw); right:-500px; }
+.dd { display:grid; gap:14px; }
+.dd-top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-radius:18px; background:radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--gc, #8a93a3) 16%, transparent), transparent 60%), #15181d; border:1px solid color-mix(in srgb, var(--gc, #8a93a3) 30%, var(--line)); }
+.dd-g { display:flex; align-items:baseline; gap:10px; }
+.dd-g b { font:600 3rem/1 var(--sans); color:var(--gc, #fff); text-shadow:0 0 24px color-mix(in srgb, var(--gc, #fff) 45%, transparent); }
+.dd-g b.dd-up { font-size:2.2rem; color:#fff; text-shadow:none; }
+.dd-g span { font:500 .62rem var(--mono); letter-spacing:.14em; color:var(--muted); } .dd-g em { font-style:normal; font-size:1rem; color:#fff; }
+.dd-bat { font-size:1.35rem; gap:10px; }
+.dd-bat i { width:62px; height:30px; padding:3px; border-width:2.5px; border-radius:7px; } .dd-bat i::after { right:-7px; top:9px; width:4px; height:8px; border-radius:0 2px 2px 0; }
+.dd-bat i u { border-radius:3px; }
+.dd-fb { padding:14px 16px; border-radius:14px; background:rgba(255,255,255,.03); border:1px solid var(--line); border-left:3px solid var(--c, #8a93a3); font-size:.92rem; line-height:1.5; }
+.dd-fb.lo { --c:#ff6b6b; } .dd-fb.mid { --c:#ffb347; } .dd-fb.hi { --c:#3fbf88; }
+.dd-fb > b { display:block; font-weight:500; font-size:1rem; color:#fff; }
+.dd-fb ul { margin:8px 0 0; padding-left:18px; color:var(--muted); font-size:.85rem; display:grid; gap:3px; }
+.dd-kpi { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; }
+.dd-k { padding:10px 8px; border-radius:12px; background:#15181d; border:1px solid var(--line); text-align:center; min-width:0; }
+.dd-k b { display:block; font:600 .95rem var(--mono); color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .dd-k span { font:500 .48rem var(--mono); letter-spacing:.16em; color:var(--dim); }
+.dd-rows { display:grid; gap:8px; } .dd-rows label { font:500 .58rem var(--mono); letter-spacing:.18em; color:var(--dim); }
+.dd-row { display:grid; grid-template-columns:minmax(0, 96px) 1fr 36px; align-items:center; gap:10px; font:500 .58rem var(--mono); letter-spacing:.1em; color:var(--muted); }
+.dd-row span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .dd-row em { font-style:normal; text-align:right; }
+.dd-row u { display:block; height:7px; border-radius:7px; background:rgba(255,255,255,.07); overflow:hidden; } .dd-row s { display:block; height:100%; border-radius:inherit; background:var(--c); box-shadow:0 0 10px -2px var(--c); text-decoration:none; transition:width .6s var(--ease); }
+.dd-how { font-size:.72rem; line-height:1.5; color:var(--dim); }
+@media (max-width:420px) { .dd-kpi { grid-template-columns:repeat(2, minmax(0, 1fr)); } .dd-g b { font-size:2.5rem; } .dd-bat { font-size:1.1rem; } .dd-bat i { width:52px; height:26px; } }
 </style>
 </head>
 <body>
@@ -2267,7 +2291,7 @@ body.dragging-now .dv-grip { cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.2</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.3</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2784,7 +2808,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.15.2';
+const APP_VER = '0.15.3';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -10589,6 +10613,116 @@ function missReport(from, to) {
 const _settleMiss = settle;
 settle = function () { const from = G && G.settled, r = _settleMiss.apply(this, arguments); try { missReport(from, G.settled); } catch (e) {} return r; };
 if (!NF_KINDS.miss) NF_KINDS.miss = ['MISSED DAY', '#ff6b6b', '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M9.5 10.5l5 5M14.5 10.5l-5 5"/>', 'missions'];
+
+/* ══════════════════════════════════════════════════════
+   v0.15.3  ·  DAY DASHBOARD: battery, grade, score, honest feedback, the day in numbers
+   ══════════════════════════════════════════════════════ */
+/* One headline for every 5% of missions done (0, 5 … 100), three ways of saying it. The date picks which one. */
+const DD_LINES = [
+  ['Nothing got done.', 'A blank day.', 'Zero. The day slipped away completely.'],
+  ['Barely started.', 'One small step, then nothing.', 'You touched the day, but only just.'],
+  ['A very weak day.', 'Almost nothing moved.', 'You showed up, but only a little.'],
+  ['A weak day.', 'Most of the day was lost.', 'A few things done, most of it left behind.'],
+  ['Well below what you planned.', 'A slow, thin day.', 'You did some work, but far from enough.'],
+  ['A quarter done.', 'One in four. The rest waited.', 'A start, not a day.'],
+  ['Under a third done.', 'You got going, then stalled.', 'Some effort, little follow-through.'],
+  ['About a third done.', 'A third of the plan, two thirds missed.', 'Not nothing, but not much either.'],
+  ['Getting closer to half.', 'Real effort, still short.', 'You moved, but the plan moved faster.'],
+  ['Just under half.', 'Almost half. Almost.', 'Half the day still waiting for you.'],
+  ['Half done.', 'An even split: half done, half not.', 'Half a day. The other half is the lesson.'],
+  ['Slightly more than half.', 'More done than left. Barely.', 'You tipped the balance, just.'],
+  ['A fair day.', 'More done than not.', 'Steady, with room to grow.'],
+  ['A decent day.', 'Solid work, a few things left.', 'Most of the plan got your attention.'],
+  ['A good day, with gaps.', 'Good, not great.', 'You kept most of your promises.'],
+  ['Three quarters done.', 'A good day. A few things slipped.', 'Three out of four. Respect.'],
+  ['A strong day.', 'Strong, just short of great.', 'Most of it done, done well.'],
+  ['A very strong day.', 'Close to everything.', 'Only a little left on the table.'],
+  ['Almost a full day.', 'So close to perfect.', 'A couple of loose ends, that is all.'],
+  ['One step from perfect.', 'Nearly everything. Nearly.', 'An excellent day with one small gap.'],
+  ['A perfect day.', 'Everything done. Full battery.', 'You did all of it. This is the standard.'],
+];
+const DD_GRADES = [[95, 'S', '#ffd36b'], [85, 'A', '#3fbf88'], [70, 'B', '#8fd4ff'], [55, 'C', '#ffb347'], [40, 'D', '#ff9a6b'], [0, 'F', '#ff6b6b']];
+const ddHash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+const ddHours = (key) => { const h = G.history[key]; let s = h ? Object.values(h.hours || {}).reduce((a, b) => a + (+b || 0), 0) : 0; if (key === dk() && typeof timerTodayMs === 'function') s += timerTodayMs() / 36e5; return s; };
+/* everything the dashboard says about a day, worked out once */
+function dayStats(key) {
+  const plan = dayPlan(key), h = G.history[key] || newDay(), done = h.completed || [], today = dk();
+  const isDone = p => done.includes(p.id), nd = plan.filter(isDone).length, n = plan.length;
+  const xpAll = plan.reduce((s, p) => s + (+p.xp || 0), 0), xpDone = plan.filter(isDone).reduce((s, p) => s + (+p.xp || 0), 0);
+  const avail = availFor(key), hrs = ddHours(key), hoursPct = Math.min(1, hrs / Math.max(1, avail * .5));
+  const pct = n ? Math.round(nd / n * 100) : null;
+  let score = n ? Math.round(60 * nd / n + 20 * (xpAll ? xpDone / xpAll : nd / n) + 20 * hoursPct) : null;
+  if (score != null && h.skipped) score = Math.min(score, 30);
+  const grade = score == null ? null : DD_GRADES.find(g => score >= g[0]);
+  const areas = {}; plan.forEach(p => { const a = areas[p.areaId] || (areas[p.areaId] = { n: 0, d: 0 }); a.n++; if (isDone(p)) a.d++; });
+  const timed = plan.filter(p => p.from), tDone = timed.filter(isDone).length;
+  const tClosed = timed.filter(p => !isDone(p) && (key < today || (key === today && winState(p) === 'missed'))).length;
+  const side = plan.filter(p => p.type === 'side'), dayOnly = plan.filter(p => p.dayOnly);
+  const atTimes = Object.values(h.at || {}).filter(Boolean).sort((a, b) => a - b);
+  return { key, plan, h, n, nd, pct, score, grade, xpAll, xpDone, avail, hrs, areas, timed, tDone, tClosed, side, dayOnly, atTimes, past: key < today, today: key === today, future: key > today };
+}
+/* average completion of the 7 days before this one (days with something planned) */
+function ddWeek(key) {
+  const v = []; for (let i = 1; i <= 7; i++) { const k = addDays(key, -i); if (k < (G.player.startDate || '')) break; const p = dayPct(k); if (p != null) v.push(p); }
+  return v.length ? { avg: Math.round(v.reduce((a, b) => a + b, 0) / v.length), max: Math.max(...v), n: v.length } : null;
+}
+function ddFeedback(S) {
+  if (S.n === 0) return { head: 'Nothing was planned for this day.', more: [] };
+  if (S.future) return { head: `${S.n} mission${S.n === 1 ? '' : 's'} planned.`, more: [`${S.avail} hours available.`] };
+  const band = Math.round(S.pct / 5), lines = DD_LINES[band], head = lines[ddHash(S.key) % lines.length];
+  const more = [], A = Object.entries(S.areas).map(([id, a]) => ({ id, ...a, name: (G.areas[id] || {}).name || id }));
+  const full = A.filter(a => a.n && a.d === a.n), none = A.filter(a => a.n && a.d === 0);
+  if (S.today && S.pct < 100) { const left = S.n - S.nd; more.push(`${left} mission${left === 1 ? '' : 's'} left, and ${hm(msLeftToday())} of today to do ${left === 1 ? 'it' : 'them'}.`); }
+  if (full.length === A.length && A.length > 1) more.push('Every life area got done.');
+  else if (full.length) more.push(`${full.map(a => a.name).join(', ')}: all done.`);
+  if (none.length) more.push(`${none.map(a => a.name).join(', ')} ${S.today ? 'still untouched' : 'skipped completely'}.`);
+  if (S.timed.length) {
+    if (S.tDone === S.timed.length) more.push(`All ${S.timed.length} timed mission${S.timed.length === 1 ? '' : 's'} done inside the window.`);
+    else if (S.tClosed) more.push(`${S.tClosed} timed mission${S.tClosed === 1 ? '' : 's'} closed before you got to ${S.tClosed === 1 ? 'it' : 'them'}.`);
+  }
+  if (S.atTimes.length && S.nd === S.n) { const last = new Date(S.atTimes[S.atTimes.length - 1]); if (last.getHours() < 12) more.push('Everything finished before noon.'); else if (last.getHours() < 17) more.push(`Last mission done at ${pad(last.getHours())}:${pad(last.getMinutes())}.`); }
+  else if (S.atTimes.length) { const first = new Date(S.atTimes[0]); if (first.getHours() < 8) more.push(`An early start: first mission at ${pad(first.getHours())}:${pad(first.getMinutes())}.`); else if (first.getHours() >= 20) more.push('Nothing got done until the evening.'); }
+  if (S.side.length) { const d = S.side.filter(p => S.h.completed.includes(p.id)).length; if (d) more.push(`${d} side quest${d === 1 ? '' : 's'} done on top.`); }
+  if (S.hrs >= .1) more.push(`${S.hrs.toFixed(1)} h tracked of ${S.avail} h available${S.hrs >= S.avail * .5 ? ', a full working day' : ''}.`);
+  else if (!S.today) more.push('No time was tracked.');
+  const W = ddWeek(S.key);
+  if (W && W.n >= 2) {
+    if (S.pct > W.max) more.push(`Best day of the week (previous best ${W.max}%).`);
+    else if (S.pct >= W.avg + 10) more.push(`Above your weekly average of ${W.avg}%.`);
+    else if (S.pct <= W.avg - 10) more.push(`Below your weekly average of ${W.avg}%.`);
+    else more.push(`Close to your weekly average of ${W.avg}%.`);
+  }
+  if (S.h.skipped) more.push(S.h.penalty ? `Counted as a missed day: −${fmt(S.h.penalty)} XP.` : 'Counted as a missed day. Your rank protected your XP.');
+  return { head, more: more.slice(0, 6) };
+}
+function ddHTML(key) {
+  const S = dayStats(key), F = ddFeedback(S), g = S.grade;
+  const bat = S.pct == null || S.future ? '' : `<span class="bat dd-bat ${batLvl(S.pct)}" style="--p:${S.pct}" role="img" aria-label="${S.pct}% of missions done"><i aria-hidden="true"><u></u></i><b>${S.pct}%</b></span>`;
+  const top = S.future || S.n === 0
+    ? `<div class="dd-top"><div class="dd-g"><b class="dd-up">${S.n ? S.n : '—'}</b><span>${S.n ? 'PLANNED' : 'NOTHING PLANNED'}</span></div>${bat}</div>`
+    : `<div class="dd-top" style="--gc:${g[2]}"><div class="dd-g"><b>${g[1]}</b><span><em>${S.score}</em> / 100${S.today ? '<br>SO FAR' : ''}</span></div>${bat}</div>`;
+  const fb = `<div class="dd-fb ${S.pct == null ? '' : batLvl(S.pct)}"><b>${esc(F.head)}</b>${F.more.length ? `<ul>${F.more.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div>`;
+  const k = (v, l) => `<div class="dd-k"><b>${v}</b><span>${l}</span></div>`;
+  const kpi = S.n ? `<div class="dd-kpi">${k(`${S.nd}/${S.n}`, 'MISSIONS')}${k((S.h.xpEarned >= 0 ? '+' : '') + fmt(S.h.xpEarned || 0), 'XP')}${k('+' + fmt(S.h.coinsEarned || 0) + ' $', 'MONEY')}${k(S.hrs.toFixed(1) + ' h', 'TRACKED')}</div>` : '';
+  const rows = Object.entries(S.areas).map(([id, a]) => { const ar = G.areas[id] || {}, p = Math.round(a.d / a.n * 100); return `<div class="dd-row" style="--c:${esc(ar.color || '#888')}"><span>${esc((ar.name || id).toUpperCase())}</span><u><s style="width:${p}%"></s></u><em>${a.d}/${a.n}</em></div>`; }).join('');
+  return `<div class="dd" data-dd="${key}">${top}${S.n && !S.future ? fb : S.future && S.n ? fb : ''}${kpi}${rows ? `<div class="dd-rows"><label>BY LIFE AREA</label>${rows}</div>` : ''}${S.score != null ? `<div class="dd-how">Score: 60 for missions done, 20 for how much of the XP you earned, 20 for hours tracked (half of the available hours counts as full). A missed day scores 30 at most.</div>` : ''}</div>`;
+}
+const _odpDD = openDayPanel;
+openDayPanel = function (key) {
+  const r = _odpDD.apply(this, arguments), pn = $('day-panel');
+  try {
+    pn.querySelectorAll('.dp-sec').forEach(s => { const l = s.querySelector(':scope > label'); if (l && /^SUMMARY$/.test(l.textContent.trim())) s.remove(); });   /* the dashboard says it better */
+    const head = pn.querySelector('.dp-head'); if (head) head.insertAdjacentHTML('afterend', ddHTML(key));
+  } catch (e) {}
+  return r;
+};
+/* today's dashboard stays live while it is open */
+const _ssDD = saveState;
+saveState = function () {
+  const r = _ssDD.apply(this, arguments);
+  try { const pn = $('day-panel'), d = pn && pn.classList.contains('open') && pn.querySelector('.dd'); if (d && d.dataset.dd === dk()) { const t = document.createElement('template'); t.innerHTML = ddHTML(dk()); d.replaceWith(t.content.firstElementChild); } } catch (e) {}
+  return r;
+};
 
 /* ══════════════════════════════════════════════════════
    PERFORMANCE CHECK
