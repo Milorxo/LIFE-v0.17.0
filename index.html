@@ -2104,6 +2104,36 @@ body.dragging-now { user-select:none; cursor:grabbing; }
 .dv-grip:hover, .dv-grip:focus-visible { color:var(--text, #fff); background:rgba(255,255,255,.05); }
 .dv-rw.dragging { opacity:.85; } .dv-rw.dragging .dv-row { border-color:var(--dvc, #8a9bff); box-shadow:0 14px 30px -18px var(--dvc, #8a9bff); }
 body.dragging-now .dv-grip { cursor:grabbing; }
+/* v0.15.2 · static mode */
+.static *, .static *::before, .static *::after { animation-duration:0s !important; animation-delay:0s !important; animation-iteration-count:1 !important; transition:none !important; scroll-behavior:auto !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; text-shadow:none !important; }
+.static .hc-sheen, .static .dvx-glow, .static .fog, .static .fw, .static #mlight { display:none !important; }
+/* batteries */
+.bat { --p:50; --c:#ffb347; display:inline-flex; align-items:center; gap:5px; color:var(--c); font:600 .6rem var(--mono); letter-spacing:.04em; white-space:nowrap; }
+.bat i, .lb i { position:relative; flex:none; width:22px; height:11px; padding:1.5px; border:1.5px solid currentColor; border-radius:3px; }
+.bat i::after, .lb i::after { content:''; position:absolute; right:-4px; top:2.5px; width:2px; height:3.5px; border-radius:0 1px 1px 0; background:currentColor; }
+.bat i u, .lb i u { display:block; height:100%; width:calc(var(--p) * 1%); min-width:1px; border-radius:1px; background:currentColor; transition:width .6s var(--ease); }
+.bat b, .lb b { font-weight:600; font-variant-numeric:tabular-nums; }
+.bat.lo, .lb.lo { --c:#ff6b6b; } .bat.mid, .lb.mid { --c:#ffb347; } .bat.hi, .lb.hi { --c:#3fbf88; }
+.lb.lo i u { animation:lbLow 1.6s ease-in-out infinite; } @keyframes lbLow { 50% { opacity:.35; } }
+.lbat { flex:none; display:inline-flex; align-items:center; gap:12px; height:2.5rem; padding:0 14px; margin-right:.6rem; border-radius:999px; border:1px solid var(--line2); background:#15181c; color:#fff; cursor:pointer; box-shadow:inset 0 1px 0 rgba(255,255,255,.05); transition:border-color .2s, transform .2s var(--ease); }
+.lbat:hover, .lbat:focus-visible { border-color:rgba(255,255,255,.4); transform:translateY(-2px); outline:none; }
+.lb { --p:50; --c:#ffb347; display:inline-flex; align-items:center; gap:6px; color:var(--c); font:600 .62rem var(--mono); }
+.lb svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; opacity:.85; }
+.lb.none { --c:#8a93a3; }
+.lbat.lb-play { position:absolute; top:clamp(18px, 3vh, 32px); right:clamp(20px, 3.4vw, 48px); z-index:10; margin:0; }
+@media (max-width:640px) { .lbat { flex-direction:column; align-items:flex-start; justify-content:center; height:2.1rem; gap:2px; padding:0 9px; margin-right:.3rem; border-radius:11px; } .lb svg { display:none; } .lb i { width:16px; height:8px; padding:1px; border-width:1px; } .lb i::after { right:-3px; top:2px; width:1.5px; height:2px; } .lb { font-size:.5rem; gap:4px; line-height:1; } }
+@media (max-width:640px) { #pg-calendar .cal-nav { gap:4px; } #pg-calendar .cal-nav .icon-btn { width:32px; height:32px; } }
+@media (max-width:380px) { #pg-calendar .lbat { display:none; } }
+@media (max-width:360px) { .lb b { display:none; } }
+/* calendar: battery on each day, missed days */
+.cal-cell { position:relative; }
+.cal-cell .c-bat { position:absolute; top:7px; right:7px; font-size:.5rem; gap:3px; }
+.cal-cell .c-bat i { width:15px; height:8px; padding:1px; border-width:1px; border-radius:2px; } .cal-cell .c-bat i::after { right:-3px; top:2px; width:1.5px; height:2px; }
+.cal-cell:has(.c-bat) .c-top { padding-right:44px; justify-content:flex-start; }
+.cal-cell.c-missed { border-color:rgba(255,107,107,.55) !important; background:repeating-linear-gradient(135deg, rgba(255,107,107,.09) 0 7px, transparent 7px 14px), #1f1517 !important; }
+.cal-cell.c-missed > * { opacity:1 !important; }
+.cal-cell.c-missed .c-skip { color:#ff8d8d; font-weight:600; letter-spacing:.06em; }
+@media (max-width:640px) { .cal-cell .c-bat b { display:none; } .cal-cell:has(.c-bat) .c-top { padding-right:20px; } .cal-cell .c-bat { top:5px; right:5px; } }
 </style>
 </head>
 <body>
@@ -2237,7 +2267,7 @@ body.dragging-now .dv-grip { cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.1</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.2</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2754,7 +2784,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.15.1';
+const APP_VER = '0.15.2';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -10447,6 +10477,118 @@ $('dev-overlay').addEventListener('keydown', e => {
   if (e.key === 'ArrowUp') sib.before(row); else sib.after(row);
   g.focus(); dvMoveSave([...row.parentNode.querySelectorAll(':scope > .dv-rw[data-k="m"]')].map(x => x.dataset.id));
 });
+
+/* ══════════════════════════════════════════════════════
+   v0.15.2  ·  STATIC MODE, BATTERIES, MISSED DAYS
+   ══════════════════════════════════════════════════════ */
+/* ── Static: no animation, no motion, no effects anywhere. Pictures stay. Saved on this device. ── */
+const STATIC_FX = ['static', 'pf-nofog', 'pf-nomouse'];
+const isStatic = () => FPS_MODE === 'static';
+try { if (localStorage.getItem(FPSM_KEY) === 'static') FPS_MODE = 'static'; } catch (e) {}
+const _fpsCompSt = fpsCompute;
+fpsCompute = function () { return isStatic() ? 30 : _fpsCompSt.apply(this, arguments); };
+const _fpsRefSt = fpsRefresh;
+fpsRefresh = function () {
+  const r = _fpsRefSt.apply(this, arguments), on = isStatic(), root = document.documentElement;
+  STATIC_FX.forEach(c => root.classList.toggle(c, on || (c !== 'static' && root.classList.contains(c) && !root.dataset.stfx)));
+  if (on) { window.LITE = true; root.classList.add('lite'); root.dataset.stfx = '1'; } else delete root.dataset.stfx;
+  return r;
+};
+const _setFpsSt = setFps;
+setFps = function (v) {
+  if (v !== 'static') { const was = isStatic(); if (was) FPS_MODE = 'auto'; const r = _setFpsSt.apply(this, arguments); if (was && typeof SKY !== 'undefined' && curPage === 'pg-play') { SKY.stop(); SKY.start(); } return r; }
+  FPS_MODE = 'static'; fpsIdle = false;
+  try { localStorage.setItem(FPSM_KEY, 'static'); } catch (e) {}
+  fpsRefresh(true); showToast('STATIC · NO MOTION, NO EFFECTS');
+};
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-fps="static"]'); if (!b) return; e.stopImmediatePropagation(); setFps('static'); }, true);
+FPS_OPTS.push(['static', 'STATIC', 'No animation, no motion, no effects. Pictures stay. Lightest of all']);
+/* the PLAY warp and counting numbers are motion too */
+const _warpSt = SKY.warp; SKY.warp = function () { if (isStatic()) return; return _warpSt.apply(this, arguments); };
+const _tilesSt = tilesAnimate;
+tilesAnimate = function (box) {
+  if (!isStatic() || !box) return _tilesSt.apply(this, arguments);
+  box.querySelectorAll('.stat[data-n]').forEach(el => { TILE_LAST[el.dataset.k] = +el.dataset.n; });   /* the number is already right: just remember it */
+};
+fpsRefresh(true);
+
+/* ── how much of a day's missions are done (every mission counts the same) ── */
+function dayPct(key) {
+  if (!G) return null;
+  const plan = dayPlan(key); if (!plan.length) return null;
+  const done = ((G.history[key] || {}).completed || []);
+  return Math.round(plan.filter(p => done.includes(p.id)).length / plan.length * 100);
+}
+const DAY_MS = (DAY_END_H - DAY_START_H) * 36e5;
+const timePct = () => Math.round(msLeftToday() / DAY_MS * 100);
+const batLvl = p => p < 25 ? 'lo' : p < 60 ? 'mid' : 'hi';
+const batHTML = (p, cls = '') => `<span class="bat ${batLvl(p)} ${cls}" style="--p:${p}"><i aria-hidden="true"><u></u></i><b>${p}%</b></span>`;
+
+/* ── two batteries next to the bell on every page: time left today, and missions done today ── */
+const LB_CLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>';
+const LB_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function lbatHTML() {
+  return `<button type="button" class="lbat" aria-label="Today: time left and missions done. Opens today's day.">
+    <span class="lb" data-lb="t" title="Time left in today's 16 hours">${LB_CLOCK}<i><u></u></i><b></b></span>
+    <span class="lb" data-lb="m" title="Today's missions done, in every life area">${LB_CHECK}<i><u></u></i><b></b></span></button>`;
+}
+function lbatInject() {
+  document.querySelectorAll('.scr > header.top .nbell').forEach(b => { if (!b.previousElementSibling || !b.previousElementSibling.classList.contains('lbat')) b.insertAdjacentHTML('beforebegin', lbatHTML()); });
+  const play = $('pg-play'); if (play && !play.querySelector(':scope > .lbat')) play.insertAdjacentHTML('beforeend', lbatHTML().replace('class="lbat"', 'class="lbat lb-play"'));
+  lbatUpdate();
+}
+let lbLast = '';
+function lbatUpdate() {
+  if (!G) return;
+  const t = timePct(), m = dayPct(dk()), mm = m == null ? 100 : m, sig = t + '|' + m;
+  if (sig === lbLast && document.querySelector('.lbat b:not(:empty)')) return; lbLast = sig;
+  document.querySelectorAll('.lbat').forEach(el => {
+    [['t', t, `${t}% OF TODAY LEFT`], ['m', mm, m == null ? 'NOTHING DUE TODAY' : `${m}% OF TODAY'S MISSIONS DONE`]].forEach(([k, p, lab]) => {
+      const s = el.querySelector(`[data-lb="${k}"]`); if (!s) return;
+      s.className = 'lb ' + batLvl(p) + (k === 'm' && m == null ? ' none' : ''); s.style.setProperty('--p', p); s.querySelector('b').textContent = m == null && k === 'm' ? '—' : p + '%'; s.setAttribute('aria-label', lab);
+    });
+    el.setAttribute('aria-label', `Today: ${t}% of the day left, ${m == null ? 'nothing due' : m + '% of missions done'}. Opens today.`);
+  });
+}
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('.lbat'); if (!b) return; e.stopPropagation(); try { openDayPanel(dk()); } catch (err) {} }, true);
+const _ssLB = saveState; saveState = function () { const r = _ssLB.apply(this, arguments); try { lbatUpdate(); } catch (e) {} return r; };
+let lbTickAt = 0;
+const _tickLB = tick; tick = function () { const r = _tickLB.apply(this, arguments); if (!document.hidden && Date.now() - lbTickAt > 20000) { lbTickAt = Date.now(); try { lbatUpdate(); } catch (e) {} } return r; };
+setTimeout(lbatInject, 0);   /* after the save has loaded */
+
+/* ── calendar: a small battery on every day, and missed days you cannot overlook ── */
+const _rcBat = renderCalendar;
+renderCalendar = function () {
+  const r = _rcBat.apply(this, arguments), today = dk();
+  document.querySelectorAll('#cal-grid .cal-cell[data-key]').forEach(c => {
+    const k = c.dataset.key, h = G.history[k];
+    if (k <= today && k >= (G.player.startDate || '')) { const p = dayPct(k); if (p != null) c.insertAdjacentHTML('beforeend', batHTML(p, 'c-bat')); }
+    if (h && h.skipped) {
+      c.classList.add('c-missed'); const s = c.querySelector('.c-skip');
+      if (s) s.textContent = h.penalty ? `MISSED · −${fmt(h.penalty)} XP` : 'MISSED · PROTECTED';
+      c.setAttribute('aria-label', c.getAttribute('aria-label') + (h.penalty ? `, missed, lost ${h.penalty} XP` : ', missed, protected by your rank'));
+    }
+  });
+  return r;
+};
+/* Days you did not open the app were never checked: loading a save always started again from yesterday.
+   Keep the saved day, so every day you were away is checked (at most the last 60). */
+const _migMiss = migrate;
+migrate = function (s) {
+  const o = _migMiss.apply(this, arguments), y = addDays(dk(), -1);
+  if (s && s.v && /^\d{4}-\d{2}-\d{2}$/.test(s.settled || '') && s.settled < y) o.settled = s.settled < addDays(y, -60) ? addDays(y, -60) : s.settled;
+  return o;
+};
+/* coming back after days away: say it clearly, and keep it in the notifications (each missed day is reported once) */
+function missReport(from, to) {
+  if (!G || !from || !to || from >= to) return;
+  let n = 0, lost = 0;
+  for (let d = addDays(from, 1), g = 0; d <= to && g++ < 400; d = addDays(d, 1)) { const h = G.history[d]; if (h && h.skipped) { n++; lost += +h.penalty || 0; } }
+  if (n) nfLog('miss', `${n} missed day${n > 1 ? 's' : ''}${lost ? ` · −${fmt(lost)} XP` : ''}`, lost ? 'Missed days are marked red in the calendar.' : 'Your rank protected your XP this time. Missed days are marked red in the calendar.');
+}
+const _settleMiss = settle;
+settle = function () { const from = G && G.settled, r = _settleMiss.apply(this, arguments); try { missReport(from, G.settled); } catch (e) {} return r; };
+if (!NF_KINDS.miss) NF_KINDS.miss = ['MISSED DAY', '#ff6b6b', '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M9.5 10.5l5 5M14.5 10.5l-5 5"/>', 'missions'];
 
 /* ══════════════════════════════════════════════════════
    PERFORMANCE CHECK
