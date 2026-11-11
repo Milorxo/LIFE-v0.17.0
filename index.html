@@ -2211,6 +2211,58 @@ body.dragging-now .dv-grip { cursor:grabbing; }
 .rw-kind { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px; margin:-2px 0 12px; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,.03); }
 @media (max-width:560px) { .dev-area-item.rw { flex-wrap:wrap; } .dev-area-item.rw input[data-act="rw-name"], .dev-area-item.rw input[data-act="rw-note"] { flex:1 1 100% !important; } }
 .rw-kind label { display:grid; gap:4px; font:500 .5rem var(--mono); letter-spacing:.16em; color:var(--dim); } .rw-kind input, .rw-kind select { width:auto; min-width:110px; min-height:40px; }
+/* v0.16.0 · map tools */
+.mm-n .mm-t { font-size:calc(15px * var(--fs, 1)); line-height:1.25; }
+.mm-n.mm-hasimg .mm-t { font-size:calc(13px * var(--fs, 1)); }
+.mm-n.mm-hasdp { flex-direction:column; gap:4px; overflow:hidden; }
+.mm-dp { max-width:100%; font:400 calc(11.5px * var(--fs, 1))/1.35 var(--sans); color:color-mix(in srgb, currentColor 62%, transparent); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; pointer-events:none; }
+.mm-n.mm-hasdp .mm-dmark { display:none; }
+.mm-n.mm-dp1 .mm-dp { -webkit-line-clamp:1; }
+.mm-guide { position:absolute; z-index:6; background:#ff5fa2; pointer-events:none; box-shadow:0 0 0 .5px rgba(255,95,162,.4); }
+.mm-view.mm-spacepan { cursor:grab; } .mm-view.mm-spacepan.pan { cursor:grabbing; }
+/* the card */
+.mm-det.mm-pop { top:auto; right:auto; bottom:auto; width:min(320px, calc(100% - 20px)); max-height:min(70vh, 560px); gap:10px; padding:12px 14px 14px; border:1px solid rgba(255,255,255,.16); border-radius:16px; background:rgba(20,23,28,.97); box-shadow:0 24px 60px -18px #000, 0 0 0 1px rgba(0,0,0,.4); transform-origin:left center; animation:mpPop .16s ease-out; }
+.mm-det.mm-pop[data-side="l"] { transform-origin:right center; } .mm-det.mm-pop[data-side="b"] { transform-origin:center top; } .mm-det.mm-pop[data-side="t"] { transform-origin:center bottom; }
+@keyframes mpPop { from { opacity:0; transform:scale(.94); } to { opacity:1; transform:none; } }
+.mm-det.mm-pop.mm-pop-drag, .mm-det.mm-pop.mm-pop-off { opacity:0; pointer-events:none; }
+.mm-shift #mm-multi.mm-float, .mm-shift .mm-det.mm-pop, .mm-ctxon .mm-det.mm-pop { opacity:.18; pointer-events:none; transition:opacity .12s; }
+.mm-pop .mm-det-head b { font-size:.56rem; color:var(--muted); }
+.mm-pop .mm-det-x { width:44px; height:44px; border-radius:12px; }
+.mm-pop .mm-f { gap:5px; font-size:.5rem; }
+.mm-pop .mm-f textarea, .mm-pop .mm-f input, .mm-pop .mm-f select { min-height:44px; padding:9px 10px; font-size:.9rem; }
+.mm-pop #mm-d-title { font-weight:500; resize:none; field-sizing:content; max-height:6.5em; }
+.mm-pop #mm-d-desc { field-sizing:content; min-height:3.2em; max-height:10em; }
+.mm-pop button:not(.mm-det-x):not(.mm-sw) { min-height:44px !important; min-width:44px; padding:0 10px !important; font-size:.54rem !important; }
+.mm-pop .mm-sw { width:44px !important; height:44px !important; }
+.mm-pop .mm-pq { gap:6px; }
+.mm-pop .mm-pfs .mm-row button.on { background:#fff; color:#0b0c0f; border-color:#fff; }
+.mm-pop .mm-more { border-top:1px solid var(--line); padding-top:8px; }
+.mm-pop .mm-more summary { cursor:pointer; font:500 .5rem var(--mono); letter-spacing:.2em; color:var(--dim); padding:6px 0; list-style:none; } .mm-pop .mm-more summary::before { content:'▸ '; } .mm-pop .mm-more[open] summary::before { content:'▾ '; }
+@media (max-width:640px) { .mm-det.mm-pop { width:calc(100% - 20px); max-height:52vh; } }
+@media (max-width:640px), (pointer:coarse) { .mm-pop button:not(.mm-sw) { min-height:44px !important; min-width:44px; } .mm-pop .mm-sw { width:44px !important; height:44px !important; } .mm-pop .mm-det-x { width:44px; height:44px; } .mm-pop .mm-f textarea, .mm-pop .mm-f input, .mm-pop .mm-f select { min-height:44px; } }
+/* the group bar floats above the group */
+#mm-multi.mm-float { bottom:auto; transform:translateX(-50%); overflow:visible; align-items:center; animation:mpBar .14s ease-out; }
+@keyframes mpBar { from { opacity:0; transform:translateX(-50%) scale(.94); } to { opacity:1; transform:translateX(-50%); } }
+#mm-multi button { display:inline-flex; align-items:center; gap:6px; }
+#mm-multi svg, .mm-ctx svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.mm-mg { position:relative; }
+.mm-menu { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); z-index:8; display:grid; grid-template-columns:repeat(4, 44px); gap:4px; padding:6px; border-radius:12px; background:rgba(20,23,28,.98); border:1px solid rgba(255,255,255,.16); box-shadow:0 18px 40px -16px #000; }
+.mm-menu button { width:44px; height:44px; justify-content:center; padding:0 !important; }
+.mm-menu.mm-menu-t { grid-template-columns:1fr; min-width:220px; } .mm-menu.mm-menu-t button { width:auto; height:auto; padding:10px 12px !important; display:grid !important; justify-items:start; text-align:left; gap:2px; } .mm-menu small { font:400 .72rem var(--sans); letter-spacing:0; color:var(--muted); text-transform:none; }
+@media (max-width:640px) { #mm-multi.mm-float { max-width:calc(100% - 16px); overflow-x:auto; } #mm-multi span:not(.mm-cnt) { display:none; } .mm-menu { position:fixed; top:auto; bottom:90px; } }
+/* right-click menu */
+.mm-ctx { position:absolute; z-index:30; min-width:230px; padding:6px; border-radius:12px; background:rgba(20,23,28,.98); border:1px solid rgba(255,255,255,.16); box-shadow:0 24px 50px -16px #000; display:grid; gap:1px; }
+.mm-ctx > button { display:flex; align-items:center; justify-content:space-between; gap:18px; min-height:44px; padding:0 10px; border:0; border-radius:8px; background:none; color:#eef1f6; font:400 .86rem var(--sans); text-align:left; cursor:pointer; }
+.mm-ctx > button:hover:not([disabled]), .mm-ctx > button:focus-visible { background:rgba(255,255,255,.08); outline:none; }
+.mm-ctx > button[disabled] { opacity:.35; cursor:default; }
+.mm-ctx kbd { font:500 .6rem var(--mono); color:var(--dim); }
+.mm-ctx hr { width:100%; height:1px; margin:4px 0; border:0; background:var(--line); }
+.mm-ctx-al { display:grid; grid-template-columns:repeat(8, 1fr); gap:2px; } .mm-ctx-al button { height:44px; border:0; border-radius:8px; background:none; color:#eef1f6; cursor:pointer; display:grid; place-items:center; } .mm-ctx-al button:hover { background:rgba(255,255,255,.08); }
+/* shortcut sheet */
+.mm-keys { position:absolute; inset:0; z-index:40; display:grid; place-items:center; padding:16px; background:rgba(5,6,8,.6); }
+.mm-keys-in { width:min(520px, 100%); max-height:80vh; overflow:auto; padding:16px 18px; border-radius:16px; background:#14171c; border:1px solid rgba(255,255,255,.14); box-shadow:0 30px 70px -20px #000; }
+.mm-keys dl { display:grid; grid-template-columns:auto 1fr; gap:8px 18px; margin:12px 0 0; } .mm-keys dt { font:500 .68rem var(--mono); color:#fff; white-space:nowrap; } .mm-keys dd { margin:0; font-size:.86rem; color:var(--muted); }
+@media (max-width:480px) { .mm-keys dl { grid-template-columns:1fr; gap:2px; } .mm-keys dd { margin-bottom:8px; } }
 </style>
 </head>
 <body>
@@ -2344,7 +2396,7 @@ body.dragging-now .dv-grip { cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.5</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.16.0</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2861,7 +2913,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.15.5';
+const APP_VER = '0.16.0';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -11148,6 +11200,355 @@ $('dev-overlay').addEventListener('change', e => {
   else if (a === 'rw-cap') { r.cap = +t.value; rwNorm(r); t.value = r.cap; }
   saveState(); if (a === 'rw-kind') renderDevMode(true);
 }, true);
+
+/* ══════════════════════════════════════════════════════
+   v0.16.0  ·  MAP: works like a design tool
+   Select (click, shift-click, drag a box, select all) · copy, cut, paste, duplicate · nudge with arrows ·
+   snap guides · align and spread · connect as a chain or all to one · bring to front, send to back ·
+   text size · a description preview on every shape · a small card that opens next to the shape ·
+   a bar above a group · right-click (or long-press) menu · a shortcut sheet (press ?)
+   ══════════════════════════════════════════════════════ */
+const MP5 = { clip: null, paste: 0, space: false, nudge: null, guides: [], lp: 0 };
+const mpIds = () => MPV.multi.size ? [...MPV.multi] : MPV.sel ? [MPV.sel] : [];
+const mpNodes = () => mpIds().map(mapNode).filter(Boolean);
+const mpMouse = e => e.pointerType === 'mouse';
+/* text size and the description preview survive saving */
+const _cleanV5 = mapClean;
+mapClean = function (b) {
+  const src = new Map(((b && Array.isArray(b.nodes)) ? b.nodes : []).filter(n => n && n.id).map(n => [String(n.id), n])), r = _cleanV5.apply(this, arguments);
+  r.nodes.forEach(n => { const s = src.get(n.id) || {}; const f = +s.fs; if (f && f !== 1) n.fs = clamp(Math.round(f * 100) / 100, .6, 2.4); });
+  return r;
+};
+const _nodeElV5 = mapNodeEl;
+mapNodeEl = function (o) {
+  const el = _nodeElV5.apply(this, arguments);
+  el.style.setProperty('--fs', o.fs || 1);
+  let p = el.querySelector('.mm-dp');
+  if (o.desc && !o.img) { if (!p) { p = document.createElement('div'); p.className = 'mm-dp'; p.setAttribute('aria-hidden', 'true'); el.insertBefore(p, el.querySelector('.mm-h')); } const v = o.desc.replace(/\s+/g, ' ').trim().slice(0, 160); if (p.textContent !== v) p.textContent = v; }
+  else if (p) p.remove();
+  el.classList.toggle('mm-hasdp', !!(o.desc && !o.img)); el.classList.toggle('mm-dp1', (o.h || 70) < 100 * (o.fs || 1));
+  return el;
+};
+
+/* ── selecting ── */
+function mpSelectList(ids, sids) { ids = ids.filter(id => mapNode(id)); if (sids && sids.length) mapSelectMixed(ids, sids); else mapSelectMany(ids); mpUI(); }
+/* shift or ⌘/ctrl click adds or removes a shape */
+$('mm-nodes').addEventListener('pointerdown', e => {
+  const el = e.target.closest('.mm-n'); if (!el || MPV.draw || !(e.shiftKey || e.metaKey || e.ctrlKey) || e.button > 0) return;
+  e.stopImmediatePropagation(); e.preventDefault();
+  const ids = mpIds(), i = ids.indexOf(el.dataset.id); if (i >= 0) ids.splice(i, 1); else ids.push(el.dataset.id);
+  mpSelectList(ids, [...MPV.ss]); sfx('tick');
+}, true);
+/* with a mouse, dragging empty canvas draws a selection box (like a design tool); space + drag, the middle button or two fingers move the map */
+const _viewDownV5 = mapViewDown;
+mapViewDown = function (e) {
+  if (!MPV.draw && mpMouse(e) && e.button === 0 && !MP5.space && !(e.target.closest && e.target.closest('.mm-n')) && !mapPtrs.size) MPV.box = true;
+  if (MP5.space && !MPV.draw) MPV.box = false;
+  return _viewDownV5.apply(this, arguments);
+};
+addEventListener('keydown', e => { if (e.code === 'Space' && curPage === 'pg-map' && !(e.target.matches && e.target.matches('input,textarea,select,[contenteditable=true]'))) { MP5.space = true; $('mm-view').classList.add('mm-spacepan'); e.preventDefault(); } });
+addEventListener('keyup', e => { if (e.code === 'Space') { MP5.space = false; $('mm-view').classList.remove('mm-spacepan'); } });
+addEventListener('blur', () => { MP5.space = false; $('pg-map').classList.remove('mm-shift'); });
+/* holding Shift (or ⌘/Ctrl) to add shapes: the card steps aside so it never covers the shape you want */
+const mpMod = e => { const on = e.shiftKey || e.metaKey || e.ctrlKey; $('pg-map').classList.toggle('mm-shift', on && curPage === 'pg-map'); };
+addEventListener('keydown', mpMod, true); addEventListener('keyup', mpMod, true);
+/* the box selection keeps a reading order (left to right, top to bottom) so CONNECT AS A CHAIN makes sense */
+const _selMixV5 = mapSelectMixed;
+mapSelectMixed = function (nids, sids) {
+  nids = nids.slice().sort((a, b) => { const A = mapNode(a), B = mapNode(b); return Math.abs(A.y - B.y) > 40 ? A.y - B.y : A.x - B.x; });
+  const r = _selMixV5.call(this, nids, sids); mpUI(); return r;
+};
+const _selV5 = mapSelect;
+mapSelect = function (id) { const r = _selV5.apply(this, arguments); mpUI(); return r; };
+const _selManyV5 = mapSelectMany;
+mapSelectMany = function (ids) { const r = _selManyV5.apply(this, arguments); mpUI(); return r; };
+
+/* ── one undo step for a change to the selection ── */
+function mpEdit(fn, keepSel) {
+  const before = mapSnap(); const res = fn(); if (res === false) return;
+  mapRenderAll(); mapCommit(before);
+  if (keepSel) mpSelectList(keepSel.n || [], keepSel.s || []); else mpUI();
+}
+/* ── copy, cut, paste, duplicate ── */
+function mpCopy(silent) {
+  const ids = new Set(mpIds()), sids = new Set(MPV.ss), B = MAPS.board; if (!ids.size && !sids.size) return false;
+  const nodes = B.nodes.filter(n => ids.has(n.id)).map(n => JSON.parse(JSON.stringify(n)));
+  const imgs = {}; nodes.forEach(n => { if (n.img && B.imgs && B.imgs[n.img]) imgs[n.img] = B.imgs[n.img]; });
+  MP5.clip = { nodes, edges: B.edges.filter(e => ids.has(e[0]) && ids.has(e[1])).map(e => e.slice()), strokes: B.strokes.filter(s => sids.has(s.id)).map(mapSClone), imgs };
+  MP5.paste = 0; try { sessionStorage.setItem('life_map_clip', JSON.stringify(MP5.clip)); } catch (e) {}
+  if (!silent) showToast(`COPIED ${nodes.length + MP5.clip.strokes.length}`);
+  return true;
+}
+function mpPaste(clip, off) {
+  clip = clip || MP5.clip; if (!clip) { try { clip = MP5.clip = JSON.parse(sessionStorage.getItem('life_map_clip') || 'null'); } catch (e) {} } if (!clip) return;
+  if (off == null) { MP5.paste++; off = 24 * MP5.paste; }
+  const B = MAPS.board, map = {}, nn = [], ns = [];
+  mpEdit(() => {
+    clip.nodes.forEach(n => { const c = JSON.parse(JSON.stringify(n)); c.id = uid('n'); map[n.id] = c.id; c.x += off; c.y += off; delete c.task; B.nodes.push(c); nn.push(c.id); if (c.img && clip.imgs && clip.imgs[c.img]) { B.imgs = B.imgs || {}; if (!B.imgs[c.img]) B.imgs[c.img] = clip.imgs[c.img]; } });
+    clip.edges.forEach(e => { if (map[e[0]] && map[e[1]]) B.edges.push([map[e[0]], map[e[1]]]); });
+    clip.strokes.forEach(s => { const c = mapSClone(s); c.id = uid('s'); mapSMove(c, s, off, off); B.strokes.push(c); ns.push(c.id); });
+  }, { n: nn, s: ns });
+}
+function mpDuplicate() { const keep = MP5.clip, kp = MP5.paste; if (!mpCopy(true)) return; const c = MP5.clip; MP5.clip = keep; MP5.paste = kp; mpPaste(c, 24); }
+function mpCut() { if (!mpCopy(true)) return; const ids = new Set(mpIds()), sids = new Set(MPV.ss), B = MAPS.board;
+  mpEdit(() => { B.nodes = B.nodes.filter(n => !ids.has(n.id)); B.edges = B.edges.filter(e => !ids.has(e[0]) && !ids.has(e[1])); B.strokes = B.strokes.filter(s => !sids.has(s.id)); MPV.multi.clear(); MPV.sel = null; MPV.ss = new Set(); }, { n: [], s: [] }); showToast('CUT'); }
+/* ── nudge: one undo step for a burst of arrow presses ── */
+function mpNudge(dx, dy) {
+  const ns = mpNodes(), ss = [...MPV.ss].map(mapStroke).filter(Boolean); if (!ns.length && !ss.length) return;
+  if (!MP5.nudge) MP5.nudge = { before: mapSnap(), t: 0 };
+  ns.forEach(n => { n.x += dx; n.y += dy; mapNodeEl(n); mapLinesFor(n.id); });
+  ss.forEach(s => { const o = mapSClone(s); mapSMove(s, o, dx, dy); mapSDraw(s); }); if (ss.length) mapSOverlay();
+  mapTouch(); mpPlace(); clearTimeout(MP5.nudge.t); MP5.nudge.t = setTimeout(() => { const b = MP5.nudge.before; MP5.nudge = null; mapCommit(b); }, 600);
+}
+/* ── connect: as a chain in selection order, or every shape to the first ── */
+function mpConnect(mode) {
+  const ids = mpIds(); if (ids.length < 2) { showToast('SELECT TWO OR MORE SHAPES'); return; }
+  const B = MAPS.board, has = (a, b) => B.edges.some(e => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a));
+  const pairs = mode === 'hub' ? ids.slice(1).map(id => [ids[0], id]) : ids.slice(1).map((id, i) => [ids[i], id]);
+  const add = pairs.filter(p => !has(p[0], p[1])); if (!add.length) { showToast('ALREADY CONNECTED'); return; }
+  mpEdit(() => { add.forEach(p => B.edges.push(p)); }, { n: ids, s: [...MPV.ss] }); showToast(`${add.length} CONNECTION${add.length > 1 ? 'S' : ''}`); sfx('claim');
+}
+/* ── align and spread ── */
+function mpAlign(k) {
+  const ns = mpNodes(); if (ns.length < 2) return;
+  const L = Math.min(...ns.map(n => n.x)), R = Math.max(...ns.map(n => n.x + n.w)), T = Math.min(...ns.map(n => n.y)), Bt = Math.max(...ns.map(n => n.y + n.h));
+  mpEdit(() => {
+    if (k === 'left') ns.forEach(n => n.x = L); else if (k === 'right') ns.forEach(n => n.x = R - n.w); else if (k === 'center') ns.forEach(n => n.x = Math.round((L + R) / 2 - n.w / 2));
+    else if (k === 'top') ns.forEach(n => n.y = T); else if (k === 'bottom') ns.forEach(n => n.y = Bt - n.h); else if (k === 'middle') ns.forEach(n => n.y = Math.round((T + Bt) / 2 - n.h / 2));
+    else if (k === 'hspace' || k === 'vspace') {
+      if (ns.length < 3) { showToast('SPREADING NEEDS THREE OR MORE SHAPES'); return false; }
+      const h = k === 'hspace', s = ns.slice().sort((a, b) => h ? a.x - b.x : a.y - b.y), tot = s.reduce((t, n) => t + (h ? n.w : n.h), 0), span = h ? R - L : Bt - T, gap = (span - tot) / (s.length - 1);
+      let p = h ? L : T; s.forEach(n => { if (h) n.x = Math.round(p); else n.y = Math.round(p); p += (h ? n.w : n.h) + gap; });
+    }
+  }, { n: mpIds(), s: [...MPV.ss] });
+}
+/* ── front and back ── */
+function mpOrder(front) {
+  const ids = new Set(mpIds()); if (!ids.size) return; const B = MAPS.board;
+  mpEdit(() => { const sel = B.nodes.filter(n => ids.has(n.id)), rest = B.nodes.filter(n => !ids.has(n.id)); B.nodes = front ? rest.concat(sel) : sel.concat(rest); $('mm-nodes').textContent = ''; }, { n: mpIds(), s: [...MPV.ss] });
+}
+/* ── text size ── */
+const MP_FS = [['S', .8], ['M', 1], ['L', 1.35], ['XL', 1.8]];
+function mpFont(v, step) {
+  const ns = mpNodes(); if (!ns.length) return;
+  mpEdit(() => { ns.forEach(n => { const f = step ? clamp(Math.round(((n.fs || 1) + step) * 100) / 100, .6, 2.4) : v; if (f === 1) delete n.fs; else n.fs = f; }); }, { n: mpIds(), s: [...MPV.ss] });
+}
+
+/* ── snap guides while dragging one shape ── */
+const _nodeMoveV5 = mapNodeMove;
+mapNodeMove = function (e) {
+  const r = _nodeMoveV5.apply(this, arguments), d = mapDrag;
+  mpGuides([]);
+  if (!d || d.pid !== e.pointerId || !d.moved || d.group || d.resize || e.altKey) { if (d && d.moved) mpPlace(); return r; }
+  const o = mapNode(d.id); if (!o) return r;
+  const k = MAPS.board.view.k, th = 6 / k, xs = [o.x, o.x + o.w / 2, o.x + o.w], ys = [o.y, o.y + o.h / 2, o.y + o.h];
+  let bx = null, by = null;
+  MAPS.board.nodes.forEach(n => { if (n.id === o.id) return; const nx = [n.x, n.x + n.w / 2, n.x + n.w], ny = [n.y, n.y + n.h / 2, n.y + n.h];
+    xs.forEach((x, i) => nx.forEach(v => { const dd = v - x; if (Math.abs(dd) < th && (!bx || Math.abs(dd) < Math.abs(bx.d))) bx = { d: dd, v, n }; }));
+    ys.forEach((y, i) => ny.forEach(v => { const dd = v - y; if (Math.abs(dd) < th && (!by || Math.abs(dd) < Math.abs(by.d))) by = { d: dd, v, n }; })); });
+  const g = [];
+  if (bx) { o.x = Math.round(o.x + bx.d); g.push({ v: true, at: bx.v, a: Math.min(o.y, bx.n.y), b: Math.max(o.y + o.h, bx.n.y + bx.n.h) }); }
+  if (by) { o.y = Math.round(o.y + by.d); g.push({ v: false, at: by.v, a: Math.min(o.x, by.n.x), b: Math.max(o.x + o.w, by.n.x + by.n.w) }); }
+  if (g.length) { const el = document.getElementById('mmn-' + o.id); el.style.left = o.x + 'px'; el.style.top = o.y + 'px'; mapLinesFor(o.id); }
+  mpGuides(g); mpPlace();
+  return r;
+};
+function mpGuides(g) {
+  const w = $('mm-world'); w.querySelectorAll('.mm-guide').forEach(x => x.remove()); if (!g.length) return;
+  const k = MAPS.board.view.k;
+  g.forEach(x => { const el = document.createElement('i'); el.className = 'mm-guide'; el.style.cssText = x.v ? `left:${x.at}px;top:${x.a - 12}px;width:${1 / k}px;height:${x.b - x.a + 24}px` : `top:${x.at}px;left:${x.a - 12}px;height:${1 / k}px;width:${x.b - x.a + 24}px`; w.appendChild(el); });
+}
+const _nodeUpV5 = mapNodeUp;
+mapNodeUp = function (e) { mpGuides([]); const r = _nodeUpV5.apply(this, arguments); mpPlace(); return r; };
+(function () { const n = $('mm-nodes'); n.removeEventListener('pointermove', _nodeMoveV5); n.addEventListener('pointermove', e => mapNodeMove(e)); n.addEventListener('pointercancel', () => mpGuides([])); })();
+
+/* ── the card next to one shape, and the bar above a group ── */
+const MP_ALIGN = [['left', 'Align left', '<path d="M4 3v18M8 7h10M8 15h6"/>'], ['center', 'Align centres', '<path d="M12 3v18M6 7h12M8 15h8"/>'], ['right', 'Align right', '<path d="M20 3v18M6 7h10M10 15h6"/>'],
+  ['top', 'Align top', '<path d="M3 4h18M7 8v10M15 8v6"/>'], ['middle', 'Align middles', '<path d="M3 12h18M7 6v12M15 8v8"/>'], ['bottom', 'Align bottom', '<path d="M3 20h18M7 6v10M15 10v6"/>'],
+  ['hspace', 'Spread across', '<path d="M4 4v16M20 4v16M10 8v8M14 8v8"/>'], ['vspace', 'Spread down', '<path d="M4 4h16M4 20h16M8 10h8M8 14h8"/>']];
+const mpIco = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+(function () {
+  /* the details sheet becomes the card */
+  const det = $('mm-det'); det.classList.add('mm-pop');
+  const head = det.querySelector('.mm-det-head b'); if (head) head.textContent = 'SHAPE';
+  const fsRow = document.createElement('div'); fsRow.className = 'mm-f mm-pfs'; fsRow.innerHTML = `TEXT SIZE<div class="mm-row">${MP_FS.map(f => `<button type="button" data-mp5="fs" data-v="${f[1]}">${f[0]}</button>`).join('')}<button type="button" data-mp5="fs-" aria-label="Smaller text">A−</button><button type="button" data-mp5="fs+" aria-label="Bigger text">A+</button></div>`;
+  const quick = document.createElement('div'); quick.className = 'mm-row mm-pq';
+  quick.innerHTML = `<button type="button" data-mm="connect" aria-pressed="false">CONNECT</button><button type="button" data-mp5="dup">DUPLICATE</button><button type="button" data-mm="img-set">IMAGE</button><button type="button" data-mm="img-del" data-mp5noimg hidden>NO IMAGE</button><button type="button" class="mm-del" data-mm="del">DELETE</button>`;
+  const desc = det.querySelector('#mm-d-desc'); if (desc) desc.rows = 3;
+  const title = det.querySelector('#mm-d-title'); if (title) title.rows = 1;
+  const url = det.querySelector('#mm-d-url'); const urlF = url && url.closest('.mm-f');
+  (urlF || det.lastElementChild).insertAdjacentElement('afterend', fsRow);
+  det.querySelector('.mm-det-head').insertAdjacentElement('afterend', quick);
+  /* mission, idea and life area fold away under MORE */
+  const mis = $('mm-d-mis'); if (mis) { const more = document.createElement('details'); more.className = 'mm-more'; more.innerHTML = '<summary>MISSION, IDEA, LIFE AREA</summary>'; mis.replaceWith(more); more.appendChild(mis); }
+  /* the group bar */
+  const mb = $('mm-multi');
+  mb.innerHTML = `<span class="mm-cnt" id="mm-multi-n">2 SELECTED</span>
+    <div class="mm-mg"><button type="button" data-mp5="menu" data-m="align" aria-haspopup="true" aria-expanded="false" title="Align and spread">${mpIco('<path d="M4 3v18M8 7h10M8 15h6"/>')}<span>ALIGN</span></button>
+      <div class="mm-menu" data-menu="align" hidden>${MP_ALIGN.map(a => `<button type="button" data-mp5="align" data-v="${a[0]}" title="${a[1]}" aria-label="${a[1]}">${mpIco(a[2])}</button>`).join('')}</div></div>
+    <div class="mm-mg"><button type="button" data-mp5="menu" data-m="conn" aria-haspopup="true" aria-expanded="false">${mpIco('<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.3 11l9.4-4M7.3 13l9.4 4"/>')}<span>CONNECT</span></button>
+      <div class="mm-menu mm-menu-t" data-menu="conn" hidden><button type="button" data-mp5="conn" data-v="chain">AS A CHAIN<small>in the order you picked them</small></button><button type="button" data-mp5="conn" data-v="hub">ALL TO THE FIRST<small>the first one you picked</small></button></div></div>
+    <button type="button" data-mp5="fs-" title="Smaller text" aria-label="Smaller text">A−</button><button type="button" data-mp5="fs+" title="Bigger text" aria-label="Bigger text">A+</button>
+    <button type="button" data-mp5="copy">COPY</button><button type="button" data-mp5="dup">DUPLICATE</button>
+    <button type="button" class="mm-del" data-mm="del" aria-label="Delete the selected shapes">DELETE</button><button type="button" data-mm="multi-done" aria-label="Clear the selection">DONE</button>`;
+  /* the right-click menu */
+  const cm = document.createElement('div'); cm.className = 'mm-ctx'; cm.id = 'mm-ctx'; cm.hidden = true; cm.setAttribute('role', 'menu'); $('pg-map').appendChild(cm);
+  /* the shortcut sheet */
+  const ks = document.createElement('div'); ks.className = 'mm-keys'; ks.id = 'mm-keys'; ks.hidden = true; ks.setAttribute('role', 'dialog'); ks.setAttribute('aria-label', 'Map shortcuts');
+  const K = [['Click', 'Select a shape'], ['Shift + click', 'Add to or remove from the selection'], ['Drag on empty space', 'Select with a box'], ['Space + drag, two fingers', 'Move around'], ['⌘/Ctrl + A', 'Select everything'], ['⌘/Ctrl + C · X · V', 'Copy · cut · paste'], ['⌘/Ctrl + D', 'Duplicate'], ['Arrows (Shift = 10)', 'Nudge'], ['Delete', 'Delete'], ['⌘/Ctrl + Z · Shift + Z', 'Undo · redo'], ['⌘/Ctrl + ] · [', 'Bring to front · send to back'], ['⌘/Ctrl + + · −', 'Bigger · smaller text'], ['Hold Alt while dragging', 'No snapping'], ['Double-click', 'Edit the title'], ['Right-click or long-press', 'More actions'], ['Esc', 'Clear the selection'], ['?', 'This sheet']];
+  ks.innerHTML = `<div class="mm-keys-in"><div class="mm-det-head"><b>SHORTCUTS</b><button type="button" class="mm-det-x" data-mp5="keys" aria-label="Close">✕</button></div><dl>${K.map(k => `<dt>${esc(k[0])}</dt><dd>${esc(k[1])}</dd>`).join('')}</dl></div>`;
+  $('pg-map').appendChild(ks);
+  const z = document.querySelector('#pg-map .mm-zoom'); if (z) z.insertAdjacentHTML('beforeend', '<button type="button" data-mp5="keys" aria-label="Keyboard shortcuts" title="Shortcuts (?)">?</button>');
+  const hint = $('mm-hint'); if (hint) hint.textContent = isPhone() ? 'DRAG TO MOVE · PINCH TO ZOOM · TAP A SHAPE · LONG-PRESS FOR MORE' : 'DRAG TO SELECT · SPACE + DRAG OR TWO FINGERS TO MOVE · CLICK A SHAPE · RIGHT-CLICK FOR MORE · ? FOR SHORTCUTS';
+})();
+/* single tap opens the card next to the shape (no dim layer, the map stays usable) */
+let mpClosing = false;
+const _detCloseV5 = mapDetClose;
+mapDetClose = function () { mpClosing = true; try { return _detCloseV5.apply(this, arguments); } finally { mpClosing = false; } };
+$('pg-map').addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-mm4="det-close"]')) { e.stopImmediatePropagation(); mapDetClose(true); } }, true);
+function mpUI() {
+  if (mpClosing) return;
+  mpCtxClose(); const ks = $('mm-keys'); if (ks) ks.hidden = true;
+  const one = MPV.sel && !MPV.multi.size && !MPV.draw && mapNode(MPV.sel);
+  if (one && !mapDetOpen()) { mapDetails(MPV.sel); }
+  if (mapDetOpen()) { $('mm-scrim').hidden = true; $('mm-sel').hidden = true; }
+  if (!one && mapDetOpen()) mapDetClose(false);
+  const o = one && mapNode(MPV.sel);
+  document.querySelectorAll('#mm-det [data-mp5="fs"]').forEach(b => b.classList.toggle('on', !!o && +b.dataset.v === (o.fs || 1)));
+  const ni = document.querySelector('#mm-det [data-mp5noimg]'); if (ni) ni.hidden = !(o && o.img);
+  const mb = $('mm-multi'); if (MPV.multi.size > 1 && !MPV.draw) { mb.hidden = false; $('mm-multi-n').textContent = MPV.multi.size + (MPV.ss.size ? ` + ${MPV.ss.size}` : '') + ' SELECTED'; } else if (!MPV.multi.size) mb.hidden = true;
+  mpMenus(null); mpPlace();
+}
+const _detailsV5 = mapDetails;
+mapDetails = function (id) { const r = _detailsV5.apply(this, arguments); $('mm-scrim').hidden = true; $('mm-sel').hidden = true; mpPlace(); return r; };
+/* do not grab the keyboard on a single click: shortcuts keep working; a double-click edits the title */
+const _focusDet = HTMLElement.prototype.focus;
+let mpNoFocus = true;   /* the card never takes the keyboard by itself: shortcuts keep working; a double-click edits the title */
+$('mm-d-title').focus = function () { if (mpNoFocus) return; return _focusDet.apply(this, arguments); };
+const _nodeUpV5b = mapNodeUp;
+mapNodeUp = function (e) {
+  const d = mapDrag, dbl = d && !d.moved && mapTap && mapTap.id === d.id && performance.now() - mapTap.t < 330;
+  const r = _nodeUpV5b.apply(this, arguments);
+  if (dbl) setTimeout(() => { const t = $('mm-d-title'); if (t && mapDetOpen()) { _focusDet.call(t); t.select(); } }, 0);
+  return r;
+};
+/* place the card beside the shape, and the group bar above the group; both follow pan, zoom and moves */
+function mpPlace() {
+  const vw = $('mm-view'), vr = vw.getBoundingClientRect(), det = $('mm-det');
+  if (mapDetOpen() && MPV.sel) {
+    const el = document.getElementById('mmn-' + MPV.sel);
+    if (el) {
+      const r = el.getBoundingClientRect(), W = det.offsetWidth || 320, H = det.offsetHeight || 300, gap = 14, m = 10, narrow = vr.width < 640, top0 = narrow ? m : m + 56;
+      const nr = { l: r.left - vr.left, t: r.top - vr.top, r: r.right - vr.left, b: r.bottom - vr.top };
+      const fitY = y => Math.max(top0, Math.min(y, vr.height - H - m)), fitX = x => Math.max(m, Math.min(x, vr.width - W - m));
+      /* try every side and keep the one that covers the fewest other shapes */
+      const others = [...document.querySelectorAll('#mm-nodes .mm-n')].filter(e => e !== el).map(e => { const q = e.getBoundingClientRect(); return { l: q.left - vr.left, t: q.top - vr.top, r: q.right - vr.left, b: q.bottom - vr.top }; });
+      const cands = (narrow ? [['b', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.b + gap], ['t', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.t - gap - H]]
+        : [['r', nr.r + gap, nr.t + (nr.b - nr.t) / 2 - Math.min(H, 260) / 2], ['l', nr.l - gap - W, nr.t + (nr.b - nr.t) / 2 - Math.min(H, 260) / 2], ['b', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.b + gap], ['t', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.t - gap - H]])
+        .map(([sd, cx, cy], i) => { const fx = fitX(cx), fy = fitY(cy), box = { l: fx, t: fy, r: fx + W, b: fy + H };
+          const shift = Math.abs(fx - cx) + Math.abs(fy - cy), selfHit = !(box.r <= nr.l || box.l >= nr.r || box.b <= nr.t || box.t >= nr.b);
+          const cover = others.reduce((a, o) => a + Math.max(0, Math.min(box.r, o.r) - Math.max(box.l, o.l)) * Math.max(0, Math.min(box.b, o.b) - Math.max(box.t, o.t)), 0);
+          return { sd, x: fx, y: fy, score: (selfHit ? 1e9 : 0) + cover + shift * 40 + i }; });
+      const best = cands.sort((a, b) => a.score - b.score)[0]; let x = best.x, y = best.y; const side = best.sd;
+      det.style.left = Math.round(x) + 'px'; det.style.top = Math.round(y) + 'px'; det.dataset.side = side;
+      det.classList.toggle('mm-pop-off', r.right < vr.left || r.left > vr.right || r.bottom < vr.top || r.top > vr.bottom);
+      det.classList.toggle('mm-pop-drag', !!(mapDrag && mapDrag.moved));
+    }
+  }
+  const mb = $('mm-multi');
+  if (!mb.hidden && MPV.multi.size > 1) {
+    const els = [...MPV.multi].map(id => document.getElementById('mmn-' + id)).filter(Boolean); if (!els.length) return;
+    const rs = els.map(e => e.getBoundingClientRect()), top = Math.min(...rs.map(r => r.top)) - vr.top, cx = (Math.min(...rs.map(r => r.left)) + Math.max(...rs.map(r => r.right))) / 2 - vr.left;
+    const W = mb.offsetWidth, H = mb.offsetHeight, tb = $('mm-tools'), minTop = tb && !tb.hidden ? tb.getBoundingClientRect().bottom - vr.top + 30 : 64;
+    const bot = Math.max(...rs.map(r => r.bottom)) - vr.top, x = Math.round(Math.max(8 + W / 2, Math.min(vr.width - 8 - W / 2, cx)));
+    /* above the group if there is room, else below; whichever covers fewer shapes */
+    const others = [...document.querySelectorAll('#mm-nodes .mm-n')].map(e => e.getBoundingClientRect());
+    const cover = y => others.reduce((a, q) => a + Math.max(0, Math.min(x + W / 2, q.right - vr.left) - Math.max(x - W / 2, q.left - vr.left)) * Math.max(0, Math.min(y + H, q.bottom - vr.top) - Math.max(y, q.top - vr.top)), 0);
+    const cands = [top - H - 14, bot + 14].map(y => Math.max(minTop, Math.min(vr.height - H - 14, y))).map((y, i) => ({ y, s: cover(y) + i }));
+    const y = cands.sort((a, b) => a.s - b.s)[0].y;
+    mb.style.left = x + 'px'; mb.style.top = Math.round(y) + 'px'; mb.classList.add('mm-float');
+  }
+}
+const _applyV5 = mapApply;
+mapApply = function () { const r = _applyV5.apply(this, arguments); mpPlace(); return r; };
+addEventListener('resize', () => { if (curPage === 'pg-map') mpPlace(); });
+/* menus inside the group bar */
+function mpMenus(which) {
+  document.querySelectorAll('#mm-multi .mm-menu').forEach(m => { const on = m.dataset.menu === which && m.hidden; m.hidden = !on; const b = m.previousElementSibling; if (b) b.setAttribute('aria-expanded', on); });
+}
+/* ── right-click and long-press ── */
+function mpCtx(cx, cy) {
+  const cm = $('mm-ctx'), n = mpIds().length, s = MPV.ss.size, any = n + s > 0, clip = !!(MP5.clip || (() => { try { return sessionStorage.getItem('life_map_clip'); } catch (e) { return null; } })());
+  const it = (a, l, k, on = true, v) => `<button type="button" role="menuitem" data-mp5="${a}" ${v ? `data-v="${v}"` : ''} ${on ? '' : 'disabled'}><span>${l}</span><kbd>${k || ''}</kbd></button>`;
+  const mod = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl+';
+  cm.innerHTML = it('copy', 'Copy', mod + 'C', any) + it('cut', 'Cut', mod + 'X', any) + it('paste', 'Paste', mod + 'V', clip) + it('dup', 'Duplicate', mod + 'D', any) + '<hr>'
+    + (n >= 2 ? it('conn', 'Connect as a chain', '', true, 'chain') + it('conn', 'Connect all to the first', '', true, 'hub') + `<div class="mm-ctx-al">${MP_ALIGN.map(a => `<button type="button" data-mp5="align" data-v="${a[0]}" title="${a[1]}" aria-label="${a[1]}">${mpIco(a[2])}</button>`).join('')}</div><hr>` : '')
+    + it('front', 'Bring to front', mod + ']', n > 0) + it('back', 'Send to back', mod + '[', n > 0) + it('fs+', 'Bigger text', mod + '+', n > 0) + it('fs-', 'Smaller text', mod + '−', n > 0) + '<hr>'
+    + it('all', 'Select all', mod + 'A') + it('del', 'Delete', 'Del', any);
+  cm.hidden = false; $('pg-map').classList.add('mm-ctxon'); const vr = $('pg-map').getBoundingClientRect(), W = cm.offsetWidth, H = cm.offsetHeight;
+  cm.style.left = Math.round(Math.min(cx - vr.left, vr.width - W - 8)) + 'px'; cm.style.top = Math.round(Math.max(8, Math.min(cy - vr.top, vr.height - H - 8))) + 'px';
+  const f = cm.querySelector('button:not([disabled])'); if (f) f.focus({ preventScroll: true });
+}
+const mpCtxClose = () => { const c = $('mm-ctx'); if (c && !c.hidden) c.hidden = true; $('pg-map').classList.remove('mm-ctxon'); };
+$('mm-view').addEventListener('contextmenu', e => {
+  if (MPV.draw) return; e.preventDefault();
+  const el = e.target.closest('.mm-n'); if (el && !mpIds().includes(el.dataset.id)) mapSelect(el.dataset.id);
+  mpCtx(e.clientX, e.clientY);
+});
+/* long-press on a phone */
+$('mm-nodes').addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' || MPV.draw) return; const el = e.target.closest('.mm-n'); if (!el) return;
+  clearTimeout(MP5.lp); const x0 = e.clientX, y0 = e.clientY;
+  MP5.lp = setTimeout(() => { if (mapDrag && mapDrag.moved) return; if (!mpIds().includes(el.dataset.id)) mapSelect(el.dataset.id); try { navigator.vibrate && navigator.vibrate(12); } catch (er) {} mpCtx(x0, y0); }, 550);
+  const cancel = ev => { if (ev.type !== 'pointermove' || Math.hypot(ev.clientX - x0, ev.clientY - y0) > 8) { clearTimeout(MP5.lp); removeEventListener('pointermove', cancel, true); removeEventListener('pointerup', cancel, true); } };
+  addEventListener('pointermove', cancel, true); addEventListener('pointerup', cancel, true);
+});
+document.addEventListener('pointerdown', e => { if (!(e.target.closest && e.target.closest('#mm-ctx'))) mpCtxClose(); if (!(e.target.closest && e.target.closest('#mm-multi'))) mpMenus(null); }, true);
+
+/* ── actions ── */
+function mpAct(a, v) {
+  if (a === 'copy') mpCopy(); else if (a === 'cut') mpCut(); else if (a === 'paste') mpPaste(); else if (a === 'dup') mpDuplicate();
+  else if (a === 'conn') mpConnect(v); else if (a === 'align') mpAlign(v);
+  else if (a === 'front') mpOrder(true); else if (a === 'back') mpOrder(false);
+  else if (a === 'fs') mpFont(+v); else if (a === 'fs+') mpFont(null, .15); else if (a === 'fs-') mpFont(null, -.15);
+  else if (a === 'all') { const B = MAPS.board; mpSelectList(B.nodes.map(n => n.id), B.strokes.map(s => s.id)); }
+  else if (a === 'del') mapDelete();
+  else if (a === 'keys') { const k = $('mm-keys'); k.hidden = !k.hidden; if (!k.hidden) k.querySelector('button').focus(); }
+}
+$('pg-map').addEventListener('click', e => {
+  const b = e.target.closest('[data-mp5]'); if (!b || b.disabled) return; e.stopPropagation();
+  const a = b.dataset.mp5;
+  if (a === 'menu') { mpMenus(b.dataset.m); return; }
+  mpCtxClose(); mpMenus(null); mpAct(a, b.dataset.v);
+});
+$('mm-keys').addEventListener('click', e => { if (e.target === $('mm-keys')) $('mm-keys').hidden = true; });
+addEventListener('keydown', e => {
+  if (curPage !== 'pg-map' || MPV.draw || document.querySelector('.overlay.open,.modal.open')) return;
+  const typing = e.target.matches && e.target.matches('input,textarea,select,[contenteditable=true]'), mod = e.metaKey || e.ctrlKey, k = e.key;
+  if (k === 'Escape') { if (!$('mm-ctx').hidden) { mpCtxClose(); e.preventDefault(); e.stopImmediatePropagation(); return; } if (!$('mm-keys').hidden) { $('mm-keys').hidden = true; e.preventDefault(); e.stopImmediatePropagation(); return; } }
+  if (typing) return;
+  const go = (fn) => { e.preventDefault(); e.stopImmediatePropagation(); fn(); };
+  if (mod && k.toLowerCase() === 'a') go(() => mpAct('all'));
+  else if (mod && k.toLowerCase() === 'c') { if (mpIds().length || MPV.ss.size) go(() => mpCopy()); }
+  else if (mod && k.toLowerCase() === 'x') { if (mpIds().length || MPV.ss.size) go(mpCut); }
+  else if (mod && k.toLowerCase() === 'v') go(() => mpPaste());
+  else if (mod && k.toLowerCase() === 'd') { if (mpIds().length || MPV.ss.size) go(mpDuplicate); else e.preventDefault(); }
+  else if (mod && k === ']') go(() => mpOrder(true)); else if (mod && k === '[') go(() => mpOrder(false));
+  else if (mod && (k === '=' || k === '+')) { if (mpIds().length) go(() => mpFont(null, .15)); }
+  else if (mod && k === '-') { if (mpIds().length) go(() => mpFont(null, -.15)); }
+  else if (!mod && /^Arrow/.test(k) && (mpIds().length || MPV.ss.size)) { const s = e.shiftKey ? 10 : 1; go(() => mpNudge(k === 'ArrowLeft' ? -s : k === 'ArrowRight' ? s : 0, k === 'ArrowUp' ? -s : k === 'ArrowDown' ? s : 0)); }
+  else if (!mod && k === '?') go(() => mpAct('keys'));
+}, true);
+/* the mission form opens the MORE section it lives in */
+const _mfV5 = mapMissionForm;
+mapMissionForm = function () { const m = document.querySelector('#mm-det .mm-more'); if (m) m.open = true; return _mfV5.apply(this, arguments); };
+/* leaving or switching maps closes the extras */
+/* undo and redo keep what you had selected, when it still exists */
+const _undoV5 = mapUndo, _redoV5 = mapRedo;
+const mpKeepSel = fn => function () { const n = mpIds(), ss = [...MPV.ss], r = fn.apply(this, arguments); const nn = n.filter(id => mapNode(id)), s2 = ss.filter(id => mapStroke(id)); if (nn.length || s2.length) mpSelectList(nn, s2); return r; };
+mapUndo = mpKeepSel(_undoV5); mapRedo = mpKeepSel(_redoV5);
+const _leaveV5 = mapLeave;
+mapLeave = function () { mpCtxClose(); mpGuides([]); $('mm-keys').hidden = true; return _leaveV5.apply(this, arguments); };
 
 /* ══════════════════════════════════════════════════════
    PERFORMANCE CHECK
