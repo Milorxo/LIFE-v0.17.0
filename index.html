@@ -19,6 +19,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="stylesheet" href="art.css">
+<link rel="stylesheet" href="journal.css">
 <script src="art.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -2396,7 +2397,7 @@ body.dragging-now .dv-grip { cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.16.0</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.17.0</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2913,7 +2914,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.16.0';
+const APP_VER = '0.17.0';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -12507,7 +12508,7 @@ const GUIDE = (() => {
   function setEnabled(on) { enabled = !!on; try { localStorage.setItem(GUIDE_KEY, on ? '1' : '0'); } catch (e) {} apply(); }
   apply();
   const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
-  return { refresh: queueRefresh, apply, setEnabled, setRun, setQuality, setVoice, store, LINES, get enabled() { return enabled; }, get quality() { return qName; },
+  return { say: (l, o) => say(l, o), refresh: queueRefresh, apply, setEnabled, setRun, setQuality, setVoice, store, LINES, get enabled() { return enabled; }, get quality() { return qName; },
     backup: () => JSON.parse(JSON.stringify(store.get())),
     restore(o) { if (o && typeof o === 'object') { store.replace(o); if (store.get().q) setQuality(store.get().q); voiceUI(); if (curPage === 'pg-bubbles') { S = read(); render(); applyModes(); } } },
     debug: () => ({ P, F: Object.fromEntries(CH.map(c => [c, F[c].x])), mood, mix, running, frames, webgl: !!gl && !fallback, fallback, line: full, typing: isTyping, queue: queue.length, skips, quiet, speaking, autoUsed,
@@ -12563,5 +12564,6 @@ setInterval(tick, 250);
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) { addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }
 
 </script>
+<script src="journal.js"></script>
 </body>
 </html>
