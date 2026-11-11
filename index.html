@@ -2093,6 +2093,9 @@ body.dragging-now { user-select:none; cursor:grabbing; }
 .pl-range { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; } .pl-range label { display:grid; gap:6px; font:500 .54rem var(--mono); letter-spacing:.18em; color:var(--dim); } .pl-range input { min-height:44px; }
 #dev-overlay.dv-closing { opacity:0; transition:opacity .22s ease; }
 @media (prefers-reduced-motion:reduce) { .ar-full.lk-pulse, .lk-shake { animation:none; } .mission-item.lk-going { transition:none; } }
+/* v0.15.0 · time numbers never wrap; pop-out button state */
+.tc-big { white-space:nowrap; }
+.tc-tools [data-tcx=pop].on { color:var(--tcc, #fff); border-color:var(--tcc, #fff); box-shadow:0 0 16px -6px var(--tcc, #fff); }
 </style>
 </head>
 <body>
@@ -2226,7 +2229,7 @@ body.dragging-now { user-select:none; cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.14.2</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.0</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2743,7 +2746,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.14.2';
+const APP_VER = '0.15.0';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -10218,6 +10221,158 @@ $('dev-overlay').addEventListener('click', e => {
   setTimeout(() => { ov.classList.remove('dv-closing'); closeOverlay('dev-overlay'); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 220);
 });
 planCheck();
+
+/* ══════════════════════════════════════════════════════
+   v0.15.0  ·  TIME CENTER: numbers that always fit, and a floating window
+   ══════════════════════════════════════════════════════ */
+/* The number never wraps. It shrinks until it fits the screen's width AND height (full screen) or its ring. */
+tcFit = function () {
+  const e = document.querySelector('#tc-body .tc-big'); if (!e) return;
+  e.style.fontSize = '';
+  const full = tcIsFull(), z = full ? clamp(+TC.look.zoom || 100, 40, 200) / 100 : 1, ring = e.closest('.tc-ring');
+  const maxW = full ? innerWidth * .92 : ring && ring.clientWidth ? ring.clientWidth * .8 : ($('tc-body').clientWidth || innerWidth) * .96;
+  const maxH = full ? innerHeight * (TC.fsDate && TC.tab === 'clock' ? .5 : .62) : Infinity;
+  const r = e.getBoundingClientRect(), w = r.width / z, h = r.height / z;
+  const k = Math.min(1, w ? maxW / w : 1, h ? maxH / h : 1);
+  if (k < 1) e.style.fontSize = (parseFloat(getComputedStyle(e).fontSize) * k * .99).toFixed(1) + 'px';
+};
+
+/* ── POP OUT: the timer in its own small window that floats over every other app ──
+   Chrome and Edge (desktop): a real always-on-top window with buttons (Document Picture-in-Picture).
+   Safari and phones: a floating video of the numbers (video Picture-in-Picture), no buttons.
+   Anything else: a small separate browser window. */
+const PIP = { win: null, kind: '', iv: 0, video: null, canvas: null };
+const pipHasDoc = () => 'documentPictureInPicture' in window;
+const pipHasVideo = () => !!(document.pictureInPictureEnabled || (HTMLVideoElement.prototype.webkitSetPresentationMode && 'captureStream' in HTMLCanvasElement.prototype));
+/* what the floating window shows: the tab you are on, unless something is running elsewhere */
+function pipWhat() {
+  const t = TC.tab;
+  if (t === 'fc' && TC.fc.st !== 'idle' || t === 'tm' && TC.tm.st !== 'idle' || t === 'sw' || t === 'clock') return t;
+  if (TC.fc.st !== 'idle') return 'fc'; if (TC.tm.st !== 'idle') return 'tm'; if (TC.sw.run || TC.sw.acc) return 'sw'; return 'clock';
+}
+function pipState() {
+  const w = pipWhat(), n = new Date();
+  if (w === 'fc') { const F = TC.fc, ar = F.area && G.areas[F.area], l = fcLeft(); return { w, num: tcCd(l), cap: `${FC_NAME[F.phase]}${ar ? ' · ' + ar.name.toUpperCase() : ''}${F.st === 'pause' ? ' · PAUSED' : ''}`, f: F.len ? l / F.len : 0, btn: [[F.st === 'run' ? 'fc:pause' : 'fc:resume', F.st === 'run' ? 'PAUSE' : 'RESUME'], ['fc:skip', 'SKIP']] }; }
+  if (w === 'tm') { const M = TC.tm, l = tmLeft(); return { w, num: tcCd(l), cap: M.st === 'done' ? 'TIME IS UP' : M.st === 'pause' ? 'TIMER · PAUSED' : 'TIMER', f: M.dur ? l / M.dur : 0, btn: [M.st === 'run' ? ['tm:pause', 'PAUSE'] : M.st === 'pause' ? ['tm:resume', 'RESUME'] : null, ['tm:add', '+5 MIN']].filter(Boolean) }; }
+  if (w === 'sw') { const W = TC.sw; return { w, num: tcSwFmt(swMs()).replace(/<[^>]*>/g, ''), cap: W.run ? 'STOPWATCH' : 'STOPWATCH · PAUSED', f: null, btn: [W.run ? ['sw:pause', 'PAUSE'] : ['sw:start', W.acc ? 'RESUME' : 'START'], W.run ? ['sw:lap', 'LAP'] : null].filter(Boolean) }; }
+  return { w, num: tcTimeF.format(n), cap: tcDateF.format(n).toUpperCase(), f: null, btn: [] };
+}
+/* +5 minutes on a running or paused timer */
+const _tmActPIP = tmAct;
+tmAct = function (a) {
+  if (a !== 'add') return _tmActPIP.apply(this, arguments);
+  const M = TC.tm; if (M.st === 'idle') return;
+  if (M.st === 'done') { M.st = 'run'; M.end = Date.now() + 300000; M.dur = 300000; }
+  else { M.dur += 300000; if (M.st === 'run') M.end += 300000; else M.left += 300000; }
+  sfx('tick'); tcSave(); tcRender();
+};
+function pipAct(a) {
+  const [k, v] = a.split(':');
+  if (k === 'sw') swAct(v); else if (k === 'tm') tmAct(v); else if (k === 'fc') fcAct(v);
+  else if (a === 'back') { pipClose(); try { window.focus(); } catch (e) {} if (!tcOpen()) openTimeCenter(); return; }
+  pipDraw(true);
+}
+const PIP_CSS = `*{box-sizing:border-box}html,body{margin:0;height:100%}body{display:grid;place-items:center;overflow:hidden;background:var(--tcbg,#0b0c0f);color:var(--tcc,#fff);font-family:'Outfit',system-ui,sans-serif;user-select:none;-webkit-user-select:none}
+.pp{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:2vh;padding:4vh 5vw 5vh;container-type:size}
+.pp-cap{font:500 clamp(9px,3.4vw,13px) 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.2em;color:#9aa3b2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-n{display:grid;place-items:center;min-height:0}
+.pp-n b{font-family:var(--tcf,'Outfit');font-weight:var(--tcw,200);letter-spacing:var(--tcls,.02em);font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1;text-shadow:var(--tcg,none);opacity:var(--tcb,1)}
+.pp-bar{height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}.pp-bar u{display:block;height:100%;background:var(--tcc,#fff);opacity:.8}
+.pp-b{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pp-b button{min-height:36px;min-width:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;font:600 11px 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.14em;cursor:pointer}
+.pp-b button:hover{background:rgba(255,255,255,.12)}.pp-b button:focus-visible{outline:2px solid var(--tcc,#fff);outline-offset:2px}
+.pp-b button.bk{color:#9aa3b2}
+@container (max-height:150px){.pp-cap,.pp-bar{display:none}.pp{padding:2vh 4vw}}`;
+function pipDraw(force) {
+  const st = pipState();
+  if (PIP.kind === 'video') { pipPaint(st); return; }
+  const d = PIP.win && PIP.win.document; if (!d) return;
+  const root = d.getElementById('pp'); if (!root) return;
+  const sig = st.w + st.btn.map(b => b[0]).join();
+  if (force || root.dataset.sig !== sig) {
+    root.dataset.sig = sig;
+    root.innerHTML = `<div class="pp-cap"></div><div class="pp-n"><b></b></div><div>${st.f != null ? '<div class="pp-bar"><u></u></div>' : ''}<div class="pp-b" style="margin-top:${st.f != null ? 10 : 0}px">${st.btn.map(b => `<button type="button" data-pa="${b[0]}">${b[1]}</button>`).join('')}<button type="button" class="bk" data-pa="back" title="Back into the game">BACK</button></div></div>`;
+  }
+  const cap = root.querySelector('.pp-cap'), b = root.querySelector('.pp-n b'), u = root.querySelector('.pp-bar u');
+  if (cap.textContent !== st.cap) cap.textContent = st.cap;
+  if (b.textContent !== st.num) { b.textContent = st.num; b.dataset.len = ''; }
+  if (u) u.style.width = (clamp(st.f, 0, 1) * 100).toFixed(1) + '%';
+  /* fit the number to the window, on one line */
+  const box = root.querySelector('.pp-n'), W = box.clientWidth, H = box.clientHeight, key = st.num.length + 'x' + W + 'x' + H;
+  if (b.dataset.len !== key) { b.dataset.len = key; b.style.fontSize = '100px'; const r = b.getBoundingClientRect(); const fs = Math.max(12, Math.min(100 * W * .94 / (r.width || 1), 100 * H * .9 / (r.height || 1))); b.style.fontSize = fs.toFixed(1) + 'px'; }
+}
+function pipStyle(d) {
+  const ov = $('tc-overlay'), cs = getComputedStyle(ov);
+  ['--tcc', '--tcf', '--tcw', '--tcls', '--tcbg', '--tcb', '--tcg'].forEach(v => d.documentElement.style.setProperty(v, ov.style.getPropertyValue(v) || cs.getPropertyValue(v)));
+}
+async function pipOpen() {
+  if (PIP.win || PIP.kind) { pipClose(); return; }
+  tcFontsLoad();
+  try {
+    if (pipHasDoc()) {
+      const w = await documentPictureInPicture.requestWindow({ width: 340, height: 230 });
+      PIP.win = w; PIP.kind = 'doc'; pipSetup(w);
+      w.addEventListener('pagehide', () => pipGone());
+    } else if (pipHasVideo()) { await pipVideoOpen(); }
+    else {
+      const w = window.open('', 'life-timer', 'popup,width=360,height=240');
+      if (!w) { showToast('POP-UPS ARE BLOCKED · ALLOW THEM FOR THIS SITE'); return; }
+      PIP.win = w; PIP.kind = 'win'; w.document.title = 'LIFE · Timer'; pipSetup(w);
+      w.addEventListener('beforeunload', () => pipGone());
+    }
+  } catch (e) { pipGone(); showToast('COULD NOT OPEN THE FLOATING WINDOW'); return; }
+  PIP.iv = setInterval(() => { try { if (PIP.kind === 'win' && PIP.win && PIP.win.closed) return pipGone(); tcCheck(); pipDraw(false); } catch (e) {} }, 250);
+  pipDraw(true); pipBtn(); sfx('open');
+}
+function pipSetup(w) {
+  const d = w.document;
+  [...document.querySelectorAll('link[rel=stylesheet]')].forEach(l => { const n = d.createElement('link'); n.rel = 'stylesheet'; n.href = l.href; d.head.appendChild(n); });
+  const s = d.createElement('style'); s.textContent = PIP_CSS; d.head.appendChild(s);
+  d.body.innerHTML = '<div class="pp" id="pp"></div>'; pipStyle(d);
+  d.body.addEventListener('click', e => { const b = e.target.closest('[data-pa]'); if (b) pipAct(b.dataset.pa); });
+  d.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { const b = d.querySelector('[data-pa]'); if (b && e.target === d.body) { e.preventDefault(); b.click(); } } });
+  w.addEventListener('resize', () => pipDraw(false));
+}
+/* video PiP: draw the number on a canvas and float the canvas as a video */
+async function pipVideoOpen() {
+  const c = PIP.canvas = document.createElement('canvas'); c.width = 640; c.height = 360;
+  const v = PIP.video = document.createElement('video'); v.muted = true; v.playsInline = true; v.autoplay = true;
+  v.style.cssText = 'position:fixed;left:-9999px;width:2px;height:2px';
+  document.body.appendChild(v); pipPaint(pipState()); v.srcObject = c.captureStream(4); await v.play();
+  PIP.kind = 'video';
+  v.addEventListener('leavepictureinpicture', () => pipGone());
+  if (v.requestPictureInPicture) await v.requestPictureInPicture(); else v.webkitSetPresentationMode('picture-in-picture');
+}
+function pipPaint(st) {
+  const c = PIP.canvas; if (!c) return; const x = c.getContext('2d'), ov = $('tc-overlay'), cs = getComputedStyle(ov);
+  const col = (ov.style.getPropertyValue('--tcc') || '#ffffff').trim(), fam = (ov.style.getPropertyValue('--tcf') || "'Outfit', sans-serif").trim(), wt = (ov.style.getPropertyValue('--tcw') || '200').trim();
+  x.fillStyle = '#0b0c0f'; x.fillRect(0, 0, c.width, c.height);
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = '#9aa3b2'; x.font = "500 22px 'JetBrains Mono', monospace"; x.fillText(st.cap.slice(0, 40), c.width / 2, 46);
+  let fs = 200; x.font = `${wt} ${fs}px ${fam}`; const w = x.measureText(st.num).width; fs = Math.min(fs, fs * c.width * .88 / (w || 1));
+  x.font = `${wt} ${fs}px ${fam}`; x.fillStyle = col; x.shadowColor = col; x.shadowBlur = 18; x.fillText(st.num, c.width / 2, c.height / 2 + 18); x.shadowBlur = 0;
+  if (st.f != null) { x.fillStyle = 'rgba(255,255,255,.12)'; x.fillRect(60, c.height - 34, c.width - 120, 4); x.fillStyle = col; x.fillRect(60, c.height - 34, (c.width - 120) * clamp(st.f, 0, 1), 4); }
+}
+function pipClose() {
+  try { if (PIP.kind === 'video') { if (document.pictureInPictureElement) document.exitPictureInPicture(); else if (PIP.video && PIP.video.webkitSetPresentationMode) PIP.video.webkitSetPresentationMode('inline'); } else if (PIP.win) PIP.win.close(); } catch (e) {}
+  pipGone();
+}
+function pipGone() {
+  clearInterval(PIP.iv); PIP.iv = 0;
+  if (PIP.video) { try { PIP.video.srcObject = null; PIP.video.remove(); } catch (e) {} }
+  PIP.win = null; PIP.kind = ''; PIP.video = null; PIP.canvas = null; pipBtn();
+}
+function pipBtn() { const b = document.querySelector('[data-tcx=pop]'); if (b) { b.classList.toggle('on', !!PIP.kind); b.setAttribute('aria-pressed', !!PIP.kind); b.title = PIP.kind ? 'Close the floating window' : 'Pop out: a floating window over other apps'; } }
+/* the floating window follows style changes */
+const _tcLookPIP = tcLookApply;
+tcLookApply = function () { const r = _tcLookPIP.apply(this, arguments); try { if (PIP.win && PIP.win.document) { pipStyle(PIP.win.document); pipDraw(true); } } catch (e) {} return r; };
+(function () {
+  const tools = document.querySelector('#tc-overlay .tc-tools'); if (!tools) return;
+  tools.insertAdjacentHTML('afterbegin', '<div class="icon-btn" data-tcx="pop" role="button" tabindex="0" aria-pressed="false" title="Pop out: a floating window over other apps" aria-label="Pop out the timer into its own window"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="13" rx="2"/><path d="M13 3h8v8M21 3l-8 8"/></svg></div>');
+  $('tc-overlay').addEventListener('click', e => { const x = e.target.closest('[data-tcx=pop]'); if (!x) return; e.stopImmediatePropagation(); pipOpen(); }, true);
+  $('tc-overlay').addEventListener('keydown', e => { const x = e.target.closest && e.target.closest('[data-tcx=pop]'); if (x && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pipOpen(); } });
+})();
+addEventListener('pagehide', () => { try { pipClose(); } catch (e) {} });
 
 /* ══════════════════════════════════════════════════════
    PERFORMANCE CHECK

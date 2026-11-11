@@ -1,7 +1,7 @@
 /* LIFE service worker. Works offline.
    - index.html, the manifest and the service worker itself: network first, so a new version on GitHub shows up.
    - art.css, art.js and the icons never change between visits: cache first, so they are not downloaded again. */
-const CACHE = 'life-v0.14.2';
+const CACHE = 'life-v0.15.0';
 const CORE = ['./', './index.html', './art.css', './art.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './icon.svg'];
 const STATIC = /\/(art\.(css|js)|icon[^/]*\.(png|svg)|apple-touch-icon\.png)$/;
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE).catch(() => {})).then(() => self.skipWaiting())); });
