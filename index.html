@@ -2096,6 +2096,14 @@ body.dragging-now { user-select:none; cursor:grabbing; }
 /* v0.15.0 · time numbers never wrap; pop-out button state */
 .tc-big { white-space:nowrap; }
 .tc-tools [data-tcx=pop].on { color:var(--tcc, #fff); border-color:var(--tcc, #fff); box-shadow:0 0 16px -6px var(--tcc, #fff); }
+/* v0.15.1 · calm updates, moving missions in Developer mode */
+#dev-overlay.dv-calm .dv-wrap, #dev-overlay.dv-calm .dv-card.hc, #dev-overlay.dv-calm .dv-card.ac2, #dev-overlay.dv-calm .dvt-b { animation:none !important; opacity:1 !important; }
+.dv-sortable > .dv-rw[data-k="m"] { display:flex; align-items:stretch; }
+.dv-sortable > .dv-rw[data-k="m"] > .dv-row { flex:1; min-width:0; }
+.dv-grip { flex:none; width:40px; min-height:44px; display:grid; place-items:center; border:0; border-radius:10px; background:none; color:var(--dim); font-size:1rem; letter-spacing:-2px; cursor:grab; touch-action:none; user-select:none; transition:color .2s, background .2s; }
+.dv-grip:hover, .dv-grip:focus-visible { color:var(--text, #fff); background:rgba(255,255,255,.05); }
+.dv-rw.dragging { opacity:.85; } .dv-rw.dragging .dv-row { border-color:var(--dvc, #8a9bff); box-shadow:0 14px 30px -18px var(--dvc, #8a9bff); }
+body.dragging-now .dv-grip { cursor:grabbing; }
 </style>
 </head>
 <body>
@@ -2229,7 +2237,7 @@ body.dragging-now { user-select:none; cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.0</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.15.1</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2746,7 +2754,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.15.0';
+const APP_VER = '0.15.1';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -10373,6 +10381,72 @@ tcLookApply = function () { const r = _tcLookPIP.apply(this, arguments); try { i
   $('tc-overlay').addEventListener('keydown', e => { const x = e.target.closest && e.target.closest('[data-tcx=pop]'); if (x && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pipOpen(); } });
 })();
 addEventListener('pagehide', () => { try { pipClose(); } catch (e) {} });
+
+/* ══════════════════════════════════════════════════════
+   v0.15.1  ·  CALM UPDATES: a change never moves the screen or replays an opening animation
+   ══════════════════════════════════════════════════════ */
+/* Missions page: redrawing the same area keeps exactly where you were. */
+let rmCalmArea = null;
+const _rmCalm = renderMissions;
+renderMissions = function (areaId) {
+  const list = $('missions-list'), same = rmCalmArea === areaId && curPage === 'pg-missions';
+  const top = list ? list.scrollTop : 0, pageEl = $('pg-missions'), ptop = pageEl ? pageEl.scrollTop : 0, wy = scrollY;
+  const r = _rmCalm.apply(this, arguments);
+  rmCalmArea = areaId;
+  if (same && list) {
+    list.scrollTop = top; if (pageEl) pageEl.scrollTop = ptop; if (scrollY !== wy) scrollTo(0, wy);
+    list.classList.add('calm');
+  } else if (list) list.classList.remove('calm');
+  return r;
+};
+
+/* Developer mode: the fade-in plays when you open a screen, not when you change something on it. */
+let dvCalmKey = '';
+const _rdCalm = renderDevMode;
+renderDevMode = function () {
+  const key = [DV.s, devArea, DV.tab, hubSel && hubSel.k, hubSel && hubSel.id].join('|');
+  const ov = $('dev-overlay'), same = key === dvCalmKey && ov.classList.contains('open');
+  ov.classList.toggle('dv-calm', same);
+  const r = _rdCalm.apply(this, arguments);
+  dvCalmKey = key;
+  try { dvOrderRows(); } catch (e) {}
+  return r;
+};
+const _coCalm = closeOverlay;
+closeOverlay = function (id) { if (id === 'dev-overlay') dvCalmKey = ''; return _coCalm.apply(this, arguments); };
+
+/* ── Developer mode: move missions up and down ── */
+/* the list follows the same order as the missions page */
+function dvOrderRows() {
+  if (DV.s !== 'area' || DV.tab !== 'm') return;
+  const box = document.querySelector('#dev-overlay .dv-list'); if (!box) return;
+  const rows = [...box.querySelectorAll(':scope > .dv-rw[data-k="m"]')]; if (rows.length < 2) return;
+  const ord = G.order[devArea] || [], at = id => { const i = ord.indexOf(id); return i < 0 ? 1e6 + rows.findIndex(r => r.dataset.id === id) : i; };
+  rows.sort((x, y) => at(x.dataset.id) - at(y.dataset.id)).forEach(r => box.appendChild(r));
+  const can = DV.filt === 'all';
+  rows.forEach(r => {
+    if (!can || r.querySelector('.dv-grip')) return;
+    const t = r.querySelector('.dv-row .t');
+    r.insertAdjacentHTML('afterbegin', `<button type="button" class="dv-grip" aria-label="Move ${esc(t ? t.textContent : 'mission')}. Drag, or use the arrow keys">⋮⋮</button>`);
+  });
+  box.classList.toggle('dv-sortable', can);
+  if (can) dragList(box, '.dv-rw[data-k="m"]', '.dv-grip', ids => dvMoveSave(ids));
+}
+function dvMoveSave(ids) {
+  const a = devArea, ms = G.missions[a] || [];
+  G.missions[a] = ms.slice().sort((x, y) => { const i = ids.indexOf(x.id), j = ids.indexOf(y.id); return (i < 0 ? 1e6 : i) - (j < 0 ? 1e6 : j); });
+  const old = (G.order[a] || []).filter(x => !ids.includes(x)); G.order[a] = ids.concat(old).slice(0, 400);
+  saveState(); sfx('tick');
+  if (curPage === 'pg-missions' && currentArea === a) renderMissions(a);
+}
+$('dev-overlay').addEventListener('click', e => { if (e.target.closest && e.target.closest('.dv-grip')) { e.stopPropagation(); e.preventDefault(); } }, true);
+$('dev-overlay').addEventListener('keydown', e => {
+  const g = e.target.closest && e.target.closest('.dv-grip'); if (!g || !/^Arrow(Up|Down)$/.test(e.key)) return;
+  e.preventDefault(); const row = g.closest('.dv-rw'), sib = e.key === 'ArrowUp' ? row.previousElementSibling : row.nextElementSibling;
+  if (!sib || !sib.matches('.dv-rw[data-k="m"]')) return;
+  if (e.key === 'ArrowUp') sib.before(row); else sib.after(row);
+  g.focus(); dvMoveSave([...row.parentNode.querySelectorAll(':scope > .dv-rw[data-k="m"]')].map(x => x.dataset.id));
+});
 
 /* ══════════════════════════════════════════════════════
    PERFORMANCE CHECK
