@@ -19,6 +19,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="stylesheet" href="art.css">
+<link rel="stylesheet" href="journal.css">
 <script src="art.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -2093,6 +2094,176 @@ body.dragging-now { user-select:none; cursor:grabbing; }
 .pl-range { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; } .pl-range label { display:grid; gap:6px; font:500 .54rem var(--mono); letter-spacing:.18em; color:var(--dim); } .pl-range input { min-height:44px; }
 #dev-overlay.dv-closing { opacity:0; transition:opacity .22s ease; }
 @media (prefers-reduced-motion:reduce) { .ar-full.lk-pulse, .lk-shake { animation:none; } .mission-item.lk-going { transition:none; } }
+/* v0.15.0 · time numbers never wrap; pop-out button state */
+.tc-big { white-space:nowrap; }
+.tc-tools [data-tcx=pop].on { color:var(--tcc, #fff); border-color:var(--tcc, #fff); box-shadow:0 0 16px -6px var(--tcc, #fff); }
+/* v0.15.1 · calm updates, moving missions in Developer mode */
+#dev-overlay.dv-calm .dv-wrap, #dev-overlay.dv-calm .dv-card.hc, #dev-overlay.dv-calm .dv-card.ac2, #dev-overlay.dv-calm .dvt-b { animation:none !important; opacity:1 !important; }
+.dv-sortable > .dv-rw[data-k="m"] { display:flex; align-items:stretch; }
+.dv-sortable > .dv-rw[data-k="m"] > .dv-row { flex:1; min-width:0; }
+.dv-grip { flex:none; width:40px; min-height:44px; display:grid; place-items:center; border:0; border-radius:10px; background:none; color:var(--dim); font-size:1rem; letter-spacing:-2px; cursor:grab; touch-action:none; user-select:none; transition:color .2s, background .2s; }
+.dv-grip:hover, .dv-grip:focus-visible { color:var(--text, #fff); background:rgba(255,255,255,.05); }
+.dv-rw.dragging { opacity:.85; } .dv-rw.dragging .dv-row { border-color:var(--dvc, #8a9bff); box-shadow:0 14px 30px -18px var(--dvc, #8a9bff); }
+body.dragging-now .dv-grip { cursor:grabbing; }
+/* v0.15.2 · static mode */
+.static *, .static *::before, .static *::after { animation-duration:0s !important; animation-delay:0s !important; animation-iteration-count:1 !important; transition:none !important; scroll-behavior:auto !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; text-shadow:none !important; }
+.static .hc-sheen, .static .dvx-glow, .static .fog, .static .fw, .static #mlight { display:none !important; }
+/* batteries */
+.bat { --p:50; --c:#ffb347; display:inline-flex; align-items:center; gap:5px; color:var(--c); font:600 .6rem var(--mono); letter-spacing:.04em; white-space:nowrap; }
+.bat i, .lb i { position:relative; flex:none; width:22px; height:11px; padding:1.5px; border:1.5px solid currentColor; border-radius:3px; }
+.bat i::after, .lb i::after { content:''; position:absolute; right:-4px; top:2.5px; width:2px; height:3.5px; border-radius:0 1px 1px 0; background:currentColor; }
+.bat i u, .lb i u { display:block; height:100%; width:calc(var(--p) * 1%); min-width:1px; border-radius:1px; background:currentColor; transition:width .6s var(--ease); }
+.bat b, .lb b { font-weight:600; font-variant-numeric:tabular-nums; }
+.bat.lo, .lb.lo { --c:#ff6b6b; } .bat.mid, .lb.mid { --c:#ffb347; } .bat.hi, .lb.hi { --c:#3fbf88; }
+.lb.lo i u { animation:lbLow 1.6s ease-in-out infinite; } @keyframes lbLow { 50% { opacity:.35; } }
+.lbat { flex:none; display:inline-flex; align-items:center; gap:12px; height:2.5rem; padding:0 14px; margin-right:.6rem; border-radius:999px; border:1px solid var(--line2); background:#15181c; color:#fff; cursor:pointer; box-shadow:inset 0 1px 0 rgba(255,255,255,.05); transition:border-color .2s, transform .2s var(--ease); }
+.lbat:hover, .lbat:focus-visible { border-color:rgba(255,255,255,.4); transform:translateY(-2px); outline:none; }
+.lb { --p:50; --c:#ffb347; display:inline-flex; align-items:center; gap:6px; color:var(--c); font:600 .62rem var(--mono); }
+.lb svg { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; opacity:.85; }
+.lb.none { --c:#8a93a3; }
+.lbat.lb-play { position:absolute; top:clamp(18px, 3vh, 32px); right:clamp(20px, 3.4vw, 48px); z-index:10; margin:0; }
+@media (max-width:640px) { .lbat { flex-direction:column; align-items:flex-start; justify-content:center; height:2.1rem; gap:2px; padding:0 9px; margin-right:.3rem; border-radius:11px; } .lb svg { display:none; } .lb i { width:16px; height:8px; padding:1px; border-width:1px; } .lb i::after { right:-3px; top:2px; width:1.5px; height:2px; } .lb { font-size:.5rem; gap:4px; line-height:1; } }
+@media (max-width:640px) { #pg-calendar .cal-nav { gap:4px; } #pg-calendar .cal-nav .icon-btn { width:32px; height:32px; } }
+@media (max-width:380px) { #pg-calendar .lbat { display:none; } }
+@media (max-width:360px) { .lb b { display:none; } }
+/* calendar: battery on each day, missed days */
+.cal-cell { position:relative; }
+.cal-cell .c-bat { position:absolute; top:7px; right:7px; font-size:.5rem; gap:3px; }
+.cal-cell .c-bat i { width:15px; height:8px; padding:1px; border-width:1px; border-radius:2px; } .cal-cell .c-bat i::after { right:-3px; top:2px; width:1.5px; height:2px; }
+.cal-cell:has(.c-bat) .c-top { padding-right:44px; justify-content:flex-start; }
+.cal-cell.c-missed { border-color:rgba(255,107,107,.55) !important; background:repeating-linear-gradient(135deg, rgba(255,107,107,.09) 0 7px, transparent 7px 14px), #1f1517 !important; }
+.cal-cell.c-missed > * { opacity:1 !important; }
+.cal-cell.c-missed .c-skip { color:#ff8d8d; font-weight:600; letter-spacing:.06em; }
+@media (max-width:640px) { .cal-cell .c-bat b { display:none; } .cal-cell:has(.c-bat) .c-top { padding-right:20px; } .cal-cell .c-bat { top:5px; right:5px; } }
+/* v0.15.3 · day dashboard */
+.day-panel { width:min(480px, 100vw); right:-500px; }
+.dd { display:grid; gap:14px; }
+.dd-top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 18px; border-radius:18px; background:radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--gc, #8a93a3) 16%, transparent), transparent 60%), #15181d; border:1px solid color-mix(in srgb, var(--gc, #8a93a3) 30%, var(--line)); }
+.dd-g { display:flex; align-items:baseline; gap:10px; }
+.dd-g b { font:600 3rem/1 var(--sans); color:var(--gc, #fff); text-shadow:0 0 24px color-mix(in srgb, var(--gc, #fff) 45%, transparent); }
+.dd-g b.dd-up { font-size:2.2rem; color:#fff; text-shadow:none; }
+.dd-g span { font:500 .62rem var(--mono); letter-spacing:.14em; color:var(--muted); } .dd-g em { font-style:normal; font-size:1rem; color:#fff; }
+.dd-bat { font-size:1.35rem; gap:10px; }
+.dd-bat i { width:62px; height:30px; padding:3px; border-width:2.5px; border-radius:7px; } .dd-bat i::after { right:-7px; top:9px; width:4px; height:8px; border-radius:0 2px 2px 0; }
+.dd-bat i u { border-radius:3px; }
+.dd-fb { padding:14px 16px; border-radius:14px; background:rgba(255,255,255,.03); border:1px solid var(--line); border-left:3px solid var(--c, #8a93a3); font-size:.92rem; line-height:1.5; }
+.dd-fb.lo { --c:#ff6b6b; } .dd-fb.mid { --c:#ffb347; } .dd-fb.hi { --c:#3fbf88; }
+.dd-fb > b { display:block; font-weight:500; font-size:1rem; color:#fff; }
+.dd-fb ul { margin:8px 0 0; padding-left:18px; color:var(--muted); font-size:.85rem; display:grid; gap:3px; }
+.dd-kpi { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; }
+.dd-k { padding:10px 8px; border-radius:12px; background:#15181d; border:1px solid var(--line); text-align:center; min-width:0; }
+.dd-k b { display:block; font:600 .95rem var(--mono); color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .dd-k span { font:500 .48rem var(--mono); letter-spacing:.16em; color:var(--dim); }
+.dd-rows { display:grid; gap:8px; } .dd-rows label { font:500 .58rem var(--mono); letter-spacing:.18em; color:var(--dim); }
+.dd-row { display:grid; grid-template-columns:minmax(0, 96px) 1fr 36px; align-items:center; gap:10px; font:500 .58rem var(--mono); letter-spacing:.1em; color:var(--muted); }
+.dd-row span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .dd-row em { font-style:normal; text-align:right; }
+.dd-row u { display:block; height:7px; border-radius:7px; background:rgba(255,255,255,.07); overflow:hidden; } .dd-row s { display:block; height:100%; border-radius:inherit; background:var(--c); box-shadow:0 0 10px -2px var(--c); text-decoration:none; transition:width .6s var(--ease); }
+.dd-how { font-size:.72rem; line-height:1.5; color:var(--dim); }
+@media (max-width:420px) { .dd-kpi { grid-template-columns:repeat(2, minmax(0, 1fr)); } .dd-g b { font-size:2.5rem; } .dd-bat { font-size:1.1rem; } .dd-bat i { width:52px; height:26px; } }
+/* v0.15.4 · combined goals */
+#goal-overlay { background:rgba(8,10,14,.97); }
+.gx-hero { display:grid; grid-template-columns:auto 1fr; align-items:center; gap:18px; padding:18px; border-radius:18px; background:radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--c) 16%, transparent), transparent 60%), #15181d; border:1px solid color-mix(in srgb, var(--c) 32%, var(--line)); }
+.gx-ring { --p:0; width:120px; height:120px; border-radius:50%; display:grid; place-content:center; text-align:center; background:radial-gradient(closest-side, #15181d 78%, transparent 79%), conic-gradient(var(--c) calc(var(--p) * 1%), rgba(255,255,255,.08) 0); box-shadow:0 0 30px -14px var(--c); }
+.gx-ring b { font:600 1.6rem/1 var(--mono); color:#fff; } .gx-ring span { margin-top:4px; font:500 .46rem var(--mono); letter-spacing:.18em; color:var(--muted); }
+.gx-hi { display:grid; gap:8px; min-width:0; } .gx-hi .gl-pill { justify-self:start; } .gx-sub { font-size:.86rem; color:var(--muted); overflow-wrap:anywhere; }
+.gx-sec { display:grid; gap:10px; margin-top:18px; }
+.gx-sec h4 { display:flex; align-items:center; justify-content:space-between; margin:0; font:600 .6rem var(--mono); letter-spacing:.2em; color:var(--dim); } .gx-sec h4 em { font-style:normal; color:var(--muted); }
+.gx-check { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.gx-cb { flex:1; min-width:200px; min-height:52px; padding:0 18px; border-radius:14px; border:1px solid color-mix(in srgb, var(--k-g, #c7a8ff) 60%, transparent); background:color-mix(in srgb, var(--k-g, #c7a8ff) 10%, transparent); color:#efe6ff; font:600 .66rem var(--mono); letter-spacing:.16em; cursor:pointer; transition:background .2s, transform .15s; }
+.gx-cb:hover { background:color-mix(in srgb, var(--k-g, #c7a8ff) 18%, transparent); } .gx-cb:active { transform:scale(.98); }
+.gx-cb.on { background:#3fbf88; border-color:#3fbf88; color:#06130c; }
+.gx-cb:disabled { opacity:.5; cursor:not-allowed; }
+.gx-st { display:grid; justify-items:center; min-width:72px; } .gx-st b { font:600 1.6rem/1 var(--mono); color:#ffb347; } .gx-st span { margin-top:4px; font:500 .46rem var(--mono); letter-spacing:.16em; color:var(--muted); }
+.gx-days { display:grid; grid-template-columns:repeat(21, minmax(0, 1fr)); gap:4px; }
+.gx-days i { aspect-ratio:1; border-radius:5px; background:rgba(255,255,255,.07); } .gx-days i.y { background:#3fbf88; box-shadow:0 0 8px -2px #3fbf88; } .gx-days i.n { background:rgba(255,107,107,.22); } .gx-days i.gd0 { background:transparent; border:1px dashed rgba(255,255,255,.06); }
+.gx-ms { display:grid; gap:8px; }
+.gx-m { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:#15181d; border:1px solid var(--line); }
+.gx-m .m-check { flex:none; } .gx-m .m-check:disabled { opacity:.35; cursor:not-allowed; }
+.gx-mt { flex:1; min-width:0; } .gx-mt b { display:block; font-weight:500; } .gx-mt span { display:block; margin-top:2px; font:500 .54rem var(--mono); letter-spacing:.1em; color:var(--dim); }
+.gx-m em { font:600 .52rem var(--mono); font-style:normal; letter-spacing:.14em; color:var(--muted); } .gx-m.done em { color:#3fbf88; } .gx-m.done .gx-mt b { color:var(--muted); text-decoration:line-through; }
+.gx-win { display:flex; align-items:baseline; gap:10px; } .gx-win b { font:600 1.4rem var(--mono); } .gx-win span { font-size:.84rem; color:var(--muted); }
+.m-goal { padding:2px 8px; border-radius:999px; border:1px solid color-mix(in srgb, var(--c) 50%, transparent); background:color-mix(in srgb, var(--c) 12%, transparent); color:color-mix(in srgb, var(--c) 70%, #fff); font:600 .5rem var(--mono); letter-spacing:.12em; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+.gx-dm { display:flex; align-items:center; gap:8px; padding:8px 8px 8px 12px; border-radius:10px; background:rgba(255,255,255,.04); }
+.gx-dm .t { flex:1; min-width:0; overflow-wrap:anywhere; } .gx-dm small { display:block; margin-top:2px; font:500 .52rem var(--mono); letter-spacing:.1em; color:var(--dim); }
+.gx-add { display:grid; grid-template-columns:1fr auto 90px auto; gap:8px; align-items:center; }
+@media (max-width:560px) { .gx-hero { grid-template-columns:1fr; justify-items:center; text-align:center; } .gx-hi .gl-pill { justify-self:center; } .gx-add { grid-template-columns:1fr 1fr; } .gx-add input[data-gmnew] { grid-column:1 / -1; } .gx-days { gap:3px; } }
+/* v0.15.5 · store inventory */
+@media (max-width:480px) { #pg-store > header.top .page-title { display:none; } }
+.sc-kind { justify-self:start; align-self:flex-start; width:max-content; display:inline-block; padding:2px 8px; border-radius:999px; font:600 .5rem var(--mono); letter-spacing:.14em; border:1px solid currentColor; }
+.sc-kind.k-time { color:#ffcf5c; } .sc-kind.k-count { color:#8fd4ff; } .sc-kind.k-once { color:#c7a8ff; }
+.sc-own { font:600 .56rem var(--mono); letter-spacing:.12em; color:#3fbf88; }
+.inv-sec { grid-column:1 / -1; margin-top:14px; font:600 .6rem var(--mono); letter-spacing:.24em; color:var(--muted); }
+.inv-empty { grid-column:1 / -1; }
+.inv-b .inv-n { font:600 1.7rem/1.1 var(--mono); color:#fff; }
+.inv-b.k-time .inv-n { color:#ffcf5c; } .inv-b.k-count .inv-n { color:#8fd4ff; }
+.inv-cap { font:500 .54rem var(--mono); letter-spacing:.12em; color:var(--dim); }
+.inv-ch { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.inv-ch .btn, .inv-b .btn { min-height:40px; }
+.inv-run { grid-column:1 / -1; display:grid; gap:10px; padding:18px; border-radius:18px; border:1px solid rgba(255,207,92,.45); background:radial-gradient(120% 140% at 0% 0%, rgba(255,207,92,.12), transparent 60%), #15181d; }
+.inv-run.pause { border-color:var(--line2); }
+.inv-rt b { display:block; margin-top:2px; font-size:1.05rem; }
+.inv-rc { font:600 clamp(2.4rem, 9vw, 3.6rem)/1 var(--mono); color:#ffcf5c; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.inv-run.pause .inv-rc { color:var(--muted); }
+.inv-run .gl-bar u { background:#ffcf5c; }
+.inv-hist { grid-column:1 / -1; display:grid; gap:4px; }
+.inv-h { display:grid; grid-template-columns:150px 1fr auto 70px; align-items:center; gap:10px; padding:8px 12px; border-radius:10px; background:rgba(255,255,255,.03); font-size:.86rem; }
+.inv-h span, .inv-h i { font:500 .54rem var(--mono); font-style:normal; letter-spacing:.1em; color:var(--dim); } .inv-h i { text-align:right; }
+.inv-h b { font-weight:400; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .inv-h em { font:600 .62rem var(--mono); font-style:normal; color:#3fbf88; } .inv-h.k-use em { color:#ffb347; } .inv-h.k-claim em { color:#c7a8ff; }
+@media (max-width:560px) { .inv-h { grid-template-columns:1fr auto; } .inv-h span { grid-column:1 / -1; } .inv-h i { display:none; } }
+.rw-kind { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px; margin:-2px 0 12px; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,.03); }
+@media (max-width:560px) { .dev-area-item.rw { flex-wrap:wrap; } .dev-area-item.rw input[data-act="rw-name"], .dev-area-item.rw input[data-act="rw-note"] { flex:1 1 100% !important; } }
+.rw-kind label { display:grid; gap:4px; font:500 .5rem var(--mono); letter-spacing:.16em; color:var(--dim); } .rw-kind input, .rw-kind select { width:auto; min-width:110px; min-height:40px; }
+/* v0.16.0 · map tools */
+.mm-n .mm-t { font-size:calc(15px * var(--fs, 1)); line-height:1.25; }
+.mm-n.mm-hasimg .mm-t { font-size:calc(13px * var(--fs, 1)); }
+.mm-n.mm-hasdp { flex-direction:column; gap:4px; overflow:hidden; }
+.mm-dp { max-width:100%; font:400 calc(11.5px * var(--fs, 1))/1.35 var(--sans); color:color-mix(in srgb, currentColor 62%, transparent); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; pointer-events:none; }
+.mm-n.mm-hasdp .mm-dmark { display:none; }
+.mm-n.mm-dp1 .mm-dp { -webkit-line-clamp:1; }
+.mm-guide { position:absolute; z-index:6; background:#ff5fa2; pointer-events:none; box-shadow:0 0 0 .5px rgba(255,95,162,.4); }
+.mm-view.mm-spacepan { cursor:grab; } .mm-view.mm-spacepan.pan { cursor:grabbing; }
+/* the card */
+.mm-det.mm-pop { top:auto; right:auto; bottom:auto; width:min(320px, calc(100% - 20px)); max-height:min(70vh, 560px); gap:10px; padding:12px 14px 14px; border:1px solid rgba(255,255,255,.16); border-radius:16px; background:rgba(20,23,28,.97); box-shadow:0 24px 60px -18px #000, 0 0 0 1px rgba(0,0,0,.4); transform-origin:left center; animation:mpPop .16s ease-out; }
+.mm-det.mm-pop[data-side="l"] { transform-origin:right center; } .mm-det.mm-pop[data-side="b"] { transform-origin:center top; } .mm-det.mm-pop[data-side="t"] { transform-origin:center bottom; }
+@keyframes mpPop { from { opacity:0; transform:scale(.94); } to { opacity:1; transform:none; } }
+.mm-det.mm-pop.mm-pop-drag, .mm-det.mm-pop.mm-pop-off { opacity:0; pointer-events:none; }
+.mm-shift #mm-multi.mm-float, .mm-shift .mm-det.mm-pop, .mm-ctxon .mm-det.mm-pop { opacity:.18; pointer-events:none; transition:opacity .12s; }
+.mm-pop .mm-det-head b { font-size:.56rem; color:var(--muted); }
+.mm-pop .mm-det-x { width:44px; height:44px; border-radius:12px; }
+.mm-pop .mm-f { gap:5px; font-size:.5rem; }
+.mm-pop .mm-f textarea, .mm-pop .mm-f input, .mm-pop .mm-f select { min-height:44px; padding:9px 10px; font-size:.9rem; }
+.mm-pop #mm-d-title { font-weight:500; resize:none; field-sizing:content; max-height:6.5em; }
+.mm-pop #mm-d-desc { field-sizing:content; min-height:3.2em; max-height:10em; }
+.mm-pop button:not(.mm-det-x):not(.mm-sw) { min-height:44px !important; min-width:44px; padding:0 10px !important; font-size:.54rem !important; }
+.mm-pop .mm-sw { width:44px !important; height:44px !important; }
+.mm-pop .mm-pq { gap:6px; }
+.mm-pop .mm-pfs .mm-row button.on { background:#fff; color:#0b0c0f; border-color:#fff; }
+.mm-pop .mm-more { border-top:1px solid var(--line); padding-top:8px; }
+.mm-pop .mm-more summary { cursor:pointer; font:500 .5rem var(--mono); letter-spacing:.2em; color:var(--dim); padding:6px 0; list-style:none; } .mm-pop .mm-more summary::before { content:'▸ '; } .mm-pop .mm-more[open] summary::before { content:'▾ '; }
+@media (max-width:640px) { .mm-det.mm-pop { width:calc(100% - 20px); max-height:52vh; } }
+@media (max-width:640px), (pointer:coarse) { .mm-pop button:not(.mm-sw) { min-height:44px !important; min-width:44px; } .mm-pop .mm-sw { width:44px !important; height:44px !important; } .mm-pop .mm-det-x { width:44px; height:44px; } .mm-pop .mm-f textarea, .mm-pop .mm-f input, .mm-pop .mm-f select { min-height:44px; } }
+/* the group bar floats above the group */
+#mm-multi.mm-float { bottom:auto; transform:translateX(-50%); overflow:visible; align-items:center; animation:mpBar .14s ease-out; }
+@keyframes mpBar { from { opacity:0; transform:translateX(-50%) scale(.94); } to { opacity:1; transform:translateX(-50%); } }
+#mm-multi button { display:inline-flex; align-items:center; gap:6px; }
+#mm-multi svg, .mm-ctx svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.mm-mg { position:relative; }
+.mm-menu { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); z-index:8; display:grid; grid-template-columns:repeat(4, 44px); gap:4px; padding:6px; border-radius:12px; background:rgba(20,23,28,.98); border:1px solid rgba(255,255,255,.16); box-shadow:0 18px 40px -16px #000; }
+.mm-menu button { width:44px; height:44px; justify-content:center; padding:0 !important; }
+.mm-menu.mm-menu-t { grid-template-columns:1fr; min-width:220px; } .mm-menu.mm-menu-t button { width:auto; height:auto; padding:10px 12px !important; display:grid !important; justify-items:start; text-align:left; gap:2px; } .mm-menu small { font:400 .72rem var(--sans); letter-spacing:0; color:var(--muted); text-transform:none; }
+@media (max-width:640px) { #mm-multi.mm-float { max-width:calc(100% - 16px); overflow-x:auto; } #mm-multi span:not(.mm-cnt) { display:none; } .mm-menu { position:fixed; top:auto; bottom:90px; } }
+/* right-click menu */
+.mm-ctx { position:absolute; z-index:30; min-width:230px; padding:6px; border-radius:12px; background:rgba(20,23,28,.98); border:1px solid rgba(255,255,255,.16); box-shadow:0 24px 50px -16px #000; display:grid; gap:1px; }
+.mm-ctx > button { display:flex; align-items:center; justify-content:space-between; gap:18px; min-height:44px; padding:0 10px; border:0; border-radius:8px; background:none; color:#eef1f6; font:400 .86rem var(--sans); text-align:left; cursor:pointer; }
+.mm-ctx > button:hover:not([disabled]), .mm-ctx > button:focus-visible { background:rgba(255,255,255,.08); outline:none; }
+.mm-ctx > button[disabled] { opacity:.35; cursor:default; }
+.mm-ctx kbd { font:500 .6rem var(--mono); color:var(--dim); }
+.mm-ctx hr { width:100%; height:1px; margin:4px 0; border:0; background:var(--line); }
+.mm-ctx-al { display:grid; grid-template-columns:repeat(8, 1fr); gap:2px; } .mm-ctx-al button { height:44px; border:0; border-radius:8px; background:none; color:#eef1f6; cursor:pointer; display:grid; place-items:center; } .mm-ctx-al button:hover { background:rgba(255,255,255,.08); }
+/* shortcut sheet */
+.mm-keys { position:absolute; inset:0; z-index:40; display:grid; place-items:center; padding:16px; background:rgba(5,6,8,.6); }
+.mm-keys-in { width:min(520px, 100%); max-height:80vh; overflow:auto; padding:16px 18px; border-radius:16px; background:#14171c; border:1px solid rgba(255,255,255,.14); box-shadow:0 30px 70px -20px #000; }
+.mm-keys dl { display:grid; grid-template-columns:auto 1fr; gap:8px 18px; margin:12px 0 0; } .mm-keys dt { font:500 .68rem var(--mono); color:#fff; white-space:nowrap; } .mm-keys dd { margin:0; font-size:.86rem; color:var(--muted); }
+@media (max-width:480px) { .mm-keys dl { grid-template-columns:1fr; gap:2px; } .mm-keys dd { margin-bottom:8px; } }
 </style>
 </head>
 <body>
@@ -2226,7 +2397,7 @@ body.dragging-now { user-select:none; cursor:grabbing; }
     <span class="word">LIFE</span>
   </div>
   <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-  <div class="sys-label" style="bottom:30px;left:44px;">V 0.14.2</div>
+  <div class="sys-label" style="bottom:30px;left:44px;">V 0.17.0</div>
   <div class="play-center">
     <h1 class="play-title">LIFE</h1>
     <div class="play-date" id="play-date"></div>
@@ -2743,7 +2914,7 @@ function migrate(s) {
   return out;
 }
 
-const APP_VER = '0.14.2';
+const APP_VER = '0.17.0';
 /* The first time a new version opens, keep a copy of the save as it was, so an upgrade can always be undone from Developer mode. */
 function safetyCopy() {
   try {
@@ -10220,6 +10391,1167 @@ $('dev-overlay').addEventListener('click', e => {
 planCheck();
 
 /* ══════════════════════════════════════════════════════
+   v0.15.0  ·  TIME CENTER: numbers that always fit, and a floating window
+   ══════════════════════════════════════════════════════ */
+/* The number never wraps. It shrinks until it fits the screen's width AND height (full screen) or its ring. */
+tcFit = function () {
+  const e = document.querySelector('#tc-body .tc-big'); if (!e) return;
+  e.style.fontSize = '';
+  const full = tcIsFull(), z = full ? clamp(+TC.look.zoom || 100, 40, 200) / 100 : 1, ring = e.closest('.tc-ring');
+  const maxW = full ? innerWidth * .92 : ring && ring.clientWidth ? ring.clientWidth * .8 : ($('tc-body').clientWidth || innerWidth) * .96;
+  const maxH = full ? innerHeight * (TC.fsDate && TC.tab === 'clock' ? .5 : .62) : Infinity;
+  const r = e.getBoundingClientRect(), w = r.width / z, h = r.height / z;
+  const k = Math.min(1, w ? maxW / w : 1, h ? maxH / h : 1);
+  if (k < 1) e.style.fontSize = (parseFloat(getComputedStyle(e).fontSize) * k * .99).toFixed(1) + 'px';
+};
+
+/* ── POP OUT: the timer in its own small window that floats over every other app ──
+   Chrome and Edge (desktop): a real always-on-top window with buttons (Document Picture-in-Picture).
+   Safari and phones: a floating video of the numbers (video Picture-in-Picture), no buttons.
+   Anything else: a small separate browser window. */
+const PIP = { win: null, kind: '', iv: 0, video: null, canvas: null };
+const pipHasDoc = () => 'documentPictureInPicture' in window;
+const pipHasVideo = () => !!(document.pictureInPictureEnabled || (HTMLVideoElement.prototype.webkitSetPresentationMode && 'captureStream' in HTMLCanvasElement.prototype));
+/* what the floating window shows: the tab you are on, unless something is running elsewhere */
+function pipWhat() {
+  const t = TC.tab;
+  if (t === 'fc' && TC.fc.st !== 'idle' || t === 'tm' && TC.tm.st !== 'idle' || t === 'sw' || t === 'clock') return t;
+  if (TC.fc.st !== 'idle') return 'fc'; if (TC.tm.st !== 'idle') return 'tm'; if (TC.sw.run || TC.sw.acc) return 'sw'; return 'clock';
+}
+function pipState() {
+  const w = pipWhat(), n = new Date();
+  if (w === 'fc') { const F = TC.fc, ar = F.area && G.areas[F.area], l = fcLeft(); return { w, num: tcCd(l), cap: `${FC_NAME[F.phase]}${ar ? ' · ' + ar.name.toUpperCase() : ''}${F.st === 'pause' ? ' · PAUSED' : ''}`, f: F.len ? l / F.len : 0, btn: [[F.st === 'run' ? 'fc:pause' : 'fc:resume', F.st === 'run' ? 'PAUSE' : 'RESUME'], ['fc:skip', 'SKIP']] }; }
+  if (w === 'tm') { const M = TC.tm, l = tmLeft(); return { w, num: tcCd(l), cap: M.st === 'done' ? 'TIME IS UP' : M.st === 'pause' ? 'TIMER · PAUSED' : 'TIMER', f: M.dur ? l / M.dur : 0, btn: [M.st === 'run' ? ['tm:pause', 'PAUSE'] : M.st === 'pause' ? ['tm:resume', 'RESUME'] : null, ['tm:add', '+5 MIN']].filter(Boolean) }; }
+  if (w === 'sw') { const W = TC.sw; return { w, num: tcSwFmt(swMs()).replace(/<[^>]*>/g, ''), cap: W.run ? 'STOPWATCH' : 'STOPWATCH · PAUSED', f: null, btn: [W.run ? ['sw:pause', 'PAUSE'] : ['sw:start', W.acc ? 'RESUME' : 'START'], W.run ? ['sw:lap', 'LAP'] : null].filter(Boolean) }; }
+  return { w, num: tcTimeF.format(n), cap: tcDateF.format(n).toUpperCase(), f: null, btn: [] };
+}
+/* +5 minutes on a running or paused timer */
+const _tmActPIP = tmAct;
+tmAct = function (a) {
+  if (a !== 'add') return _tmActPIP.apply(this, arguments);
+  const M = TC.tm; if (M.st === 'idle') return;
+  if (M.st === 'done') { M.st = 'run'; M.end = Date.now() + 300000; M.dur = 300000; }
+  else { M.dur += 300000; if (M.st === 'run') M.end += 300000; else M.left += 300000; }
+  sfx('tick'); tcSave(); tcRender();
+};
+function pipAct(a) {
+  const [k, v] = a.split(':');
+  if (k === 'sw') swAct(v); else if (k === 'tm') tmAct(v); else if (k === 'fc') fcAct(v);
+  else if (a === 'back') { pipClose(); try { window.focus(); } catch (e) {} if (!tcOpen()) openTimeCenter(); return; }
+  pipDraw(true);
+}
+const PIP_CSS = `*{box-sizing:border-box}html,body{margin:0;height:100%}body{display:grid;place-items:center;overflow:hidden;background:var(--tcbg,#0b0c0f);color:var(--tcc,#fff);font-family:'Outfit',system-ui,sans-serif;user-select:none;-webkit-user-select:none}
+.pp{width:100%;height:100%;display:grid;grid-template-rows:auto 1fr auto;gap:2vh;padding:4vh 5vw 5vh;container-type:size}
+.pp-cap{font:500 clamp(9px,3.4vw,13px) 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.2em;color:#9aa3b2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-n{display:grid;place-items:center;min-height:0}
+.pp-n b{font-family:var(--tcf,'Outfit');font-weight:var(--tcw,200);letter-spacing:var(--tcls,.02em);font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1;text-shadow:var(--tcg,none);opacity:var(--tcb,1)}
+.pp-bar{height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}.pp-bar u{display:block;height:100%;background:var(--tcc,#fff);opacity:.8}
+.pp-b{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pp-b button{min-height:36px;min-width:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;font:600 11px 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.14em;cursor:pointer}
+.pp-b button:hover{background:rgba(255,255,255,.12)}.pp-b button:focus-visible{outline:2px solid var(--tcc,#fff);outline-offset:2px}
+.pp-b button.bk{color:#9aa3b2}
+@container (max-height:150px){.pp-cap,.pp-bar{display:none}.pp{padding:2vh 4vw}}`;
+function pipDraw(force) {
+  const st = pipState();
+  if (PIP.kind === 'video') { pipPaint(st); return; }
+  const d = PIP.win && PIP.win.document; if (!d) return;
+  const root = d.getElementById('pp'); if (!root) return;
+  const sig = st.w + st.btn.map(b => b[0]).join();
+  if (force || root.dataset.sig !== sig) {
+    root.dataset.sig = sig;
+    root.innerHTML = `<div class="pp-cap"></div><div class="pp-n"><b></b></div><div>${st.f != null ? '<div class="pp-bar"><u></u></div>' : ''}<div class="pp-b" style="margin-top:${st.f != null ? 10 : 0}px">${st.btn.map(b => `<button type="button" data-pa="${b[0]}">${b[1]}</button>`).join('')}<button type="button" class="bk" data-pa="back" title="Back into the game">BACK</button></div></div>`;
+  }
+  const cap = root.querySelector('.pp-cap'), b = root.querySelector('.pp-n b'), u = root.querySelector('.pp-bar u');
+  if (cap.textContent !== st.cap) cap.textContent = st.cap;
+  if (b.textContent !== st.num) { b.textContent = st.num; b.dataset.len = ''; }
+  if (u) u.style.width = (clamp(st.f, 0, 1) * 100).toFixed(1) + '%';
+  /* fit the number to the window, on one line */
+  const box = root.querySelector('.pp-n'), W = box.clientWidth, H = box.clientHeight, key = st.num.length + 'x' + W + 'x' + H;
+  if (b.dataset.len !== key) { b.dataset.len = key; b.style.fontSize = '100px'; const r = b.getBoundingClientRect(); const fs = Math.max(12, Math.min(100 * W * .94 / (r.width || 1), 100 * H * .9 / (r.height || 1))); b.style.fontSize = fs.toFixed(1) + 'px'; }
+}
+function pipStyle(d) {
+  const ov = $('tc-overlay'), cs = getComputedStyle(ov);
+  ['--tcc', '--tcf', '--tcw', '--tcls', '--tcbg', '--tcb', '--tcg'].forEach(v => d.documentElement.style.setProperty(v, ov.style.getPropertyValue(v) || cs.getPropertyValue(v)));
+}
+async function pipOpen() {
+  if (PIP.win || PIP.kind) { pipClose(); return; }
+  tcFontsLoad();
+  try {
+    if (pipHasDoc()) {
+      const w = await documentPictureInPicture.requestWindow({ width: 340, height: 230 });
+      PIP.win = w; PIP.kind = 'doc'; pipSetup(w);
+      w.addEventListener('pagehide', () => pipGone());
+    } else if (pipHasVideo()) { await pipVideoOpen(); }
+    else {
+      const w = window.open('', 'life-timer', 'popup,width=360,height=240');
+      if (!w) { showToast('POP-UPS ARE BLOCKED · ALLOW THEM FOR THIS SITE'); return; }
+      PIP.win = w; PIP.kind = 'win'; w.document.title = 'LIFE · Timer'; pipSetup(w);
+      w.addEventListener('beforeunload', () => pipGone());
+    }
+  } catch (e) { pipGone(); showToast('COULD NOT OPEN THE FLOATING WINDOW'); return; }
+  PIP.iv = setInterval(() => { try { if (PIP.kind === 'win' && PIP.win && PIP.win.closed) return pipGone(); tcCheck(); pipDraw(false); } catch (e) {} }, 250);
+  pipDraw(true); pipBtn(); sfx('open');
+}
+function pipSetup(w) {
+  const d = w.document;
+  [...document.querySelectorAll('link[rel=stylesheet]')].forEach(l => { const n = d.createElement('link'); n.rel = 'stylesheet'; n.href = l.href; d.head.appendChild(n); });
+  const s = d.createElement('style'); s.textContent = PIP_CSS; d.head.appendChild(s);
+  d.body.innerHTML = '<div class="pp" id="pp"></div>'; pipStyle(d);
+  d.body.addEventListener('click', e => { const b = e.target.closest('[data-pa]'); if (b) pipAct(b.dataset.pa); });
+  d.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { const b = d.querySelector('[data-pa]'); if (b && e.target === d.body) { e.preventDefault(); b.click(); } } });
+  w.addEventListener('resize', () => pipDraw(false));
+}
+/* video PiP: draw the number on a canvas and float the canvas as a video */
+async function pipVideoOpen() {
+  const c = PIP.canvas = document.createElement('canvas'); c.width = 640; c.height = 360;
+  const v = PIP.video = document.createElement('video'); v.muted = true; v.playsInline = true; v.autoplay = true;
+  v.style.cssText = 'position:fixed;left:-9999px;width:2px;height:2px';
+  document.body.appendChild(v); pipPaint(pipState()); v.srcObject = c.captureStream(4); await v.play();
+  PIP.kind = 'video';
+  v.addEventListener('leavepictureinpicture', () => pipGone());
+  if (v.requestPictureInPicture) await v.requestPictureInPicture(); else v.webkitSetPresentationMode('picture-in-picture');
+}
+function pipPaint(st) {
+  const c = PIP.canvas; if (!c) return; const x = c.getContext('2d'), ov = $('tc-overlay'), cs = getComputedStyle(ov);
+  const col = (ov.style.getPropertyValue('--tcc') || '#ffffff').trim(), fam = (ov.style.getPropertyValue('--tcf') || "'Outfit', sans-serif").trim(), wt = (ov.style.getPropertyValue('--tcw') || '200').trim();
+  x.fillStyle = '#0b0c0f'; x.fillRect(0, 0, c.width, c.height);
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = '#9aa3b2'; x.font = "500 22px 'JetBrains Mono', monospace"; x.fillText(st.cap.slice(0, 40), c.width / 2, 46);
+  let fs = 200; x.font = `${wt} ${fs}px ${fam}`; const w = x.measureText(st.num).width; fs = Math.min(fs, fs * c.width * .88 / (w || 1));
+  x.font = `${wt} ${fs}px ${fam}`; x.fillStyle = col; x.shadowColor = col; x.shadowBlur = 18; x.fillText(st.num, c.width / 2, c.height / 2 + 18); x.shadowBlur = 0;
+  if (st.f != null) { x.fillStyle = 'rgba(255,255,255,.12)'; x.fillRect(60, c.height - 34, c.width - 120, 4); x.fillStyle = col; x.fillRect(60, c.height - 34, (c.width - 120) * clamp(st.f, 0, 1), 4); }
+}
+function pipClose() {
+  try { if (PIP.kind === 'video') { if (document.pictureInPictureElement) document.exitPictureInPicture(); else if (PIP.video && PIP.video.webkitSetPresentationMode) PIP.video.webkitSetPresentationMode('inline'); } else if (PIP.win) PIP.win.close(); } catch (e) {}
+  pipGone();
+}
+function pipGone() {
+  clearInterval(PIP.iv); PIP.iv = 0;
+  if (PIP.video) { try { PIP.video.srcObject = null; PIP.video.remove(); } catch (e) {} }
+  PIP.win = null; PIP.kind = ''; PIP.video = null; PIP.canvas = null; pipBtn();
+}
+function pipBtn() { const b = document.querySelector('[data-tcx=pop]'); if (b) { b.classList.toggle('on', !!PIP.kind); b.setAttribute('aria-pressed', !!PIP.kind); b.title = PIP.kind ? 'Close the floating window' : 'Pop out: a floating window over other apps'; } }
+/* the floating window follows style changes */
+const _tcLookPIP = tcLookApply;
+tcLookApply = function () { const r = _tcLookPIP.apply(this, arguments); try { if (PIP.win && PIP.win.document) { pipStyle(PIP.win.document); pipDraw(true); } } catch (e) {} return r; };
+(function () {
+  const tools = document.querySelector('#tc-overlay .tc-tools'); if (!tools) return;
+  tools.insertAdjacentHTML('afterbegin', '<div class="icon-btn" data-tcx="pop" role="button" tabindex="0" aria-pressed="false" title="Pop out: a floating window over other apps" aria-label="Pop out the timer into its own window"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="13" rx="2"/><path d="M13 3h8v8M21 3l-8 8"/></svg></div>');
+  $('tc-overlay').addEventListener('click', e => { const x = e.target.closest('[data-tcx=pop]'); if (!x) return; e.stopImmediatePropagation(); pipOpen(); }, true);
+  $('tc-overlay').addEventListener('keydown', e => { const x = e.target.closest && e.target.closest('[data-tcx=pop]'); if (x && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pipOpen(); } });
+})();
+addEventListener('pagehide', () => { try { pipClose(); } catch (e) {} });
+
+/* ══════════════════════════════════════════════════════
+   v0.15.1  ·  CALM UPDATES: a change never moves the screen or replays an opening animation
+   ══════════════════════════════════════════════════════ */
+/* Missions page: redrawing the same area keeps exactly where you were. */
+let rmCalmArea = null;
+const _rmCalm = renderMissions;
+renderMissions = function (areaId) {
+  const list = $('missions-list'), same = rmCalmArea === areaId && curPage === 'pg-missions';
+  const top = list ? list.scrollTop : 0, pageEl = $('pg-missions'), ptop = pageEl ? pageEl.scrollTop : 0, wy = scrollY;
+  const r = _rmCalm.apply(this, arguments);
+  rmCalmArea = areaId;
+  if (same && list) {
+    list.scrollTop = top; if (pageEl) pageEl.scrollTop = ptop; if (scrollY !== wy) scrollTo(0, wy);
+    list.classList.add('calm');
+  } else if (list) list.classList.remove('calm');
+  return r;
+};
+
+/* Developer mode: the fade-in plays when you open a screen, not when you change something on it. */
+let dvCalmKey = '';
+const _rdCalm = renderDevMode;
+renderDevMode = function () {
+  const key = [DV.s, devArea, DV.tab, hubSel && hubSel.k, hubSel && hubSel.id].join('|');
+  const ov = $('dev-overlay'), same = key === dvCalmKey && ov.classList.contains('open');
+  ov.classList.toggle('dv-calm', same);
+  const r = _rdCalm.apply(this, arguments);
+  dvCalmKey = key;
+  try { dvOrderRows(); } catch (e) {}
+  return r;
+};
+const _coCalm = closeOverlay;
+closeOverlay = function (id) { if (id === 'dev-overlay') dvCalmKey = ''; return _coCalm.apply(this, arguments); };
+
+/* ── Developer mode: move missions up and down ── */
+/* the list follows the same order as the missions page */
+function dvOrderRows() {
+  if (DV.s !== 'area' || DV.tab !== 'm') return;
+  const box = document.querySelector('#dev-overlay .dv-list'); if (!box) return;
+  const rows = [...box.querySelectorAll(':scope > .dv-rw[data-k="m"]')]; if (rows.length < 2) return;
+  const ord = G.order[devArea] || [], at = id => { const i = ord.indexOf(id); return i < 0 ? 1e6 + rows.findIndex(r => r.dataset.id === id) : i; };
+  rows.sort((x, y) => at(x.dataset.id) - at(y.dataset.id)).forEach(r => box.appendChild(r));
+  const can = DV.filt === 'all';
+  rows.forEach(r => {
+    if (!can || r.querySelector('.dv-grip')) return;
+    const t = r.querySelector('.dv-row .t');
+    r.insertAdjacentHTML('afterbegin', `<button type="button" class="dv-grip" aria-label="Move ${esc(t ? t.textContent : 'mission')}. Drag, or use the arrow keys">⋮⋮</button>`);
+  });
+  box.classList.toggle('dv-sortable', can);
+  if (can) dragList(box, '.dv-rw[data-k="m"]', '.dv-grip', ids => dvMoveSave(ids));
+}
+function dvMoveSave(ids) {
+  const a = devArea, ms = G.missions[a] || [];
+  G.missions[a] = ms.slice().sort((x, y) => { const i = ids.indexOf(x.id), j = ids.indexOf(y.id); return (i < 0 ? 1e6 : i) - (j < 0 ? 1e6 : j); });
+  const old = (G.order[a] || []).filter(x => !ids.includes(x)); G.order[a] = ids.concat(old).slice(0, 400);
+  saveState(); sfx('tick');
+  if (curPage === 'pg-missions' && currentArea === a) renderMissions(a);
+}
+$('dev-overlay').addEventListener('click', e => { if (e.target.closest && e.target.closest('.dv-grip')) { e.stopPropagation(); e.preventDefault(); } }, true);
+$('dev-overlay').addEventListener('keydown', e => {
+  const g = e.target.closest && e.target.closest('.dv-grip'); if (!g || !/^Arrow(Up|Down)$/.test(e.key)) return;
+  e.preventDefault(); const row = g.closest('.dv-rw'), sib = e.key === 'ArrowUp' ? row.previousElementSibling : row.nextElementSibling;
+  if (!sib || !sib.matches('.dv-rw[data-k="m"]')) return;
+  if (e.key === 'ArrowUp') sib.before(row); else sib.after(row);
+  g.focus(); dvMoveSave([...row.parentNode.querySelectorAll(':scope > .dv-rw[data-k="m"]')].map(x => x.dataset.id));
+});
+
+/* ══════════════════════════════════════════════════════
+   v0.15.2  ·  STATIC MODE, BATTERIES, MISSED DAYS
+   ══════════════════════════════════════════════════════ */
+/* ── Static: no animation, no motion, no effects anywhere. Pictures stay. Saved on this device. ── */
+const STATIC_FX = ['static', 'pf-nofog', 'pf-nomouse'];
+const isStatic = () => FPS_MODE === 'static';
+try { if (localStorage.getItem(FPSM_KEY) === 'static') FPS_MODE = 'static'; } catch (e) {}
+const _fpsCompSt = fpsCompute;
+fpsCompute = function () { return isStatic() ? 30 : _fpsCompSt.apply(this, arguments); };
+const _fpsRefSt = fpsRefresh;
+fpsRefresh = function () {
+  const r = _fpsRefSt.apply(this, arguments), on = isStatic(), root = document.documentElement;
+  STATIC_FX.forEach(c => root.classList.toggle(c, on || (c !== 'static' && root.classList.contains(c) && !root.dataset.stfx)));
+  if (on) { window.LITE = true; root.classList.add('lite'); root.dataset.stfx = '1'; } else delete root.dataset.stfx;
+  return r;
+};
+const _setFpsSt = setFps;
+setFps = function (v) {
+  if (v !== 'static') { const was = isStatic(); if (was) FPS_MODE = 'auto'; const r = _setFpsSt.apply(this, arguments); if (was && typeof SKY !== 'undefined' && curPage === 'pg-play') { SKY.stop(); SKY.start(); } return r; }
+  FPS_MODE = 'static'; fpsIdle = false;
+  try { localStorage.setItem(FPSM_KEY, 'static'); } catch (e) {}
+  fpsRefresh(true); showToast('STATIC · NO MOTION, NO EFFECTS');
+};
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-fps="static"]'); if (!b) return; e.stopImmediatePropagation(); setFps('static'); }, true);
+FPS_OPTS.push(['static', 'STATIC', 'No animation, no motion, no effects. Pictures stay. Lightest of all']);
+/* the PLAY warp and counting numbers are motion too */
+const _warpSt = SKY.warp; SKY.warp = function () { if (isStatic()) return; return _warpSt.apply(this, arguments); };
+const _tilesSt = tilesAnimate;
+tilesAnimate = function (box) {
+  if (!isStatic() || !box) return _tilesSt.apply(this, arguments);
+  box.querySelectorAll('.stat[data-n]').forEach(el => { TILE_LAST[el.dataset.k] = +el.dataset.n; });   /* the number is already right: just remember it */
+};
+fpsRefresh(true);
+
+/* ── how much of a day's missions are done (every mission counts the same) ── */
+function dayPct(key) {
+  if (!G) return null;
+  const plan = dayPlan(key); if (!plan.length) return null;
+  const done = ((G.history[key] || {}).completed || []);
+  return Math.round(plan.filter(p => done.includes(p.id)).length / plan.length * 100);
+}
+const DAY_MS = (DAY_END_H - DAY_START_H) * 36e5;
+const timePct = () => Math.round(msLeftToday() / DAY_MS * 100);
+const batLvl = p => p < 25 ? 'lo' : p < 60 ? 'mid' : 'hi';
+const batHTML = (p, cls = '') => `<span class="bat ${batLvl(p)} ${cls}" style="--p:${p}"><i aria-hidden="true"><u></u></i><b>${p}%</b></span>`;
+
+/* ── two batteries next to the bell on every page: time left today, and missions done today ── */
+const LB_CLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>';
+const LB_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function lbatHTML() {
+  return `<button type="button" class="lbat" aria-label="Today: time left and missions done. Opens today's day.">
+    <span class="lb" data-lb="t" title="Time left in today's 16 hours">${LB_CLOCK}<i><u></u></i><b></b></span>
+    <span class="lb" data-lb="m" title="Today's missions done, in every life area">${LB_CHECK}<i><u></u></i><b></b></span></button>`;
+}
+function lbatInject() {
+  document.querySelectorAll('.scr > header.top .nbell').forEach(b => { if (!b.previousElementSibling || !b.previousElementSibling.classList.contains('lbat')) b.insertAdjacentHTML('beforebegin', lbatHTML()); });
+  const play = $('pg-play'); if (play && !play.querySelector(':scope > .lbat')) play.insertAdjacentHTML('beforeend', lbatHTML().replace('class="lbat"', 'class="lbat lb-play"'));
+  lbatUpdate();
+}
+let lbLast = '';
+function lbatUpdate() {
+  if (!G) return;
+  const t = timePct(), m = dayPct(dk()), mm = m == null ? 100 : m, sig = t + '|' + m;
+  if (sig === lbLast && document.querySelector('.lbat b:not(:empty)')) return; lbLast = sig;
+  document.querySelectorAll('.lbat').forEach(el => {
+    [['t', t, `${t}% OF TODAY LEFT`], ['m', mm, m == null ? 'NOTHING DUE TODAY' : `${m}% OF TODAY'S MISSIONS DONE`]].forEach(([k, p, lab]) => {
+      const s = el.querySelector(`[data-lb="${k}"]`); if (!s) return;
+      s.className = 'lb ' + batLvl(p) + (k === 'm' && m == null ? ' none' : ''); s.style.setProperty('--p', p); s.querySelector('b').textContent = m == null && k === 'm' ? '—' : p + '%'; s.setAttribute('aria-label', lab);
+    });
+    el.setAttribute('aria-label', `Today: ${t}% of the day left, ${m == null ? 'nothing due' : m + '% of missions done'}. Opens today.`);
+  });
+}
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('.lbat'); if (!b) return; e.stopPropagation(); try { openDayPanel(dk()); } catch (err) {} }, true);
+const _ssLB = saveState; saveState = function () { const r = _ssLB.apply(this, arguments); try { lbatUpdate(); } catch (e) {} return r; };
+let lbTickAt = 0;
+const _tickLB = tick; tick = function () { const r = _tickLB.apply(this, arguments); if (!document.hidden && Date.now() - lbTickAt > 20000) { lbTickAt = Date.now(); try { lbatUpdate(); } catch (e) {} } return r; };
+setTimeout(lbatInject, 0);   /* after the save has loaded */
+
+/* ── calendar: a small battery on every day, and missed days you cannot overlook ── */
+const _rcBat = renderCalendar;
+renderCalendar = function () {
+  const r = _rcBat.apply(this, arguments), today = dk();
+  document.querySelectorAll('#cal-grid .cal-cell[data-key]').forEach(c => {
+    const k = c.dataset.key, h = G.history[k];
+    if (k <= today && k >= (G.player.startDate || '')) { const p = dayPct(k); if (p != null) c.insertAdjacentHTML('beforeend', batHTML(p, 'c-bat')); }
+    if (h && h.skipped) {
+      c.classList.add('c-missed'); const s = c.querySelector('.c-skip');
+      if (s) s.textContent = h.penalty ? `MISSED · −${fmt(h.penalty)} XP` : 'MISSED · PROTECTED';
+      c.setAttribute('aria-label', c.getAttribute('aria-label') + (h.penalty ? `, missed, lost ${h.penalty} XP` : ', missed, protected by your rank'));
+    }
+  });
+  return r;
+};
+/* Days you did not open the app were never checked: loading a save always started again from yesterday.
+   Keep the saved day, so every day you were away is checked (at most the last 60). */
+const _migMiss = migrate;
+migrate = function (s) {
+  const o = _migMiss.apply(this, arguments), y = addDays(dk(), -1);
+  if (s && s.v && /^\d{4}-\d{2}-\d{2}$/.test(s.settled || '') && s.settled < y) o.settled = s.settled < addDays(y, -60) ? addDays(y, -60) : s.settled;
+  return o;
+};
+/* coming back after days away: say it clearly, and keep it in the notifications (each missed day is reported once) */
+function missReport(from, to) {
+  if (!G || !from || !to || from >= to) return;
+  let n = 0, lost = 0;
+  for (let d = addDays(from, 1), g = 0; d <= to && g++ < 400; d = addDays(d, 1)) { const h = G.history[d]; if (h && h.skipped) { n++; lost += +h.penalty || 0; } }
+  if (n) nfLog('miss', `${n} missed day${n > 1 ? 's' : ''}${lost ? ` · −${fmt(lost)} XP` : ''}`, lost ? 'Missed days are marked red in the calendar.' : 'Your rank protected your XP this time. Missed days are marked red in the calendar.');
+}
+const _settleMiss = settle;
+settle = function () { const from = G && G.settled, r = _settleMiss.apply(this, arguments); try { missReport(from, G.settled); } catch (e) {} return r; };
+if (!NF_KINDS.miss) NF_KINDS.miss = ['MISSED DAY', '#ff6b6b', '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M9.5 10.5l5 5M14.5 10.5l-5 5"/>', 'missions'];
+
+/* ══════════════════════════════════════════════════════
+   v0.15.3  ·  DAY DASHBOARD: battery, grade, score, honest feedback, the day in numbers
+   ══════════════════════════════════════════════════════ */
+/* One headline for every 5% of missions done (0, 5 … 100), three ways of saying it. The date picks which one. */
+const DD_LINES = [
+  ['Nothing got done.', 'A blank day.', 'Zero. The day slipped away completely.'],
+  ['Barely started.', 'One small step, then nothing.', 'You touched the day, but only just.'],
+  ['A very weak day.', 'Almost nothing moved.', 'You showed up, but only a little.'],
+  ['A weak day.', 'Most of the day was lost.', 'A few things done, most of it left behind.'],
+  ['Well below what you planned.', 'A slow, thin day.', 'You did some work, but far from enough.'],
+  ['A quarter done.', 'One in four. The rest waited.', 'A start, not a day.'],
+  ['Under a third done.', 'You got going, then stalled.', 'Some effort, little follow-through.'],
+  ['About a third done.', 'A third of the plan, two thirds missed.', 'Not nothing, but not much either.'],
+  ['Getting closer to half.', 'Real effort, still short.', 'You moved, but the plan moved faster.'],
+  ['Just under half.', 'Almost half. Almost.', 'Half the day still waiting for you.'],
+  ['Half done.', 'An even split: half done, half not.', 'Half a day. The other half is the lesson.'],
+  ['Slightly more than half.', 'More done than left. Barely.', 'You tipped the balance, just.'],
+  ['A fair day.', 'More done than not.', 'Steady, with room to grow.'],
+  ['A decent day.', 'Solid work, a few things left.', 'Most of the plan got your attention.'],
+  ['A good day, with gaps.', 'Good, not great.', 'You kept most of your promises.'],
+  ['Three quarters done.', 'A good day. A few things slipped.', 'Three out of four. Respect.'],
+  ['A strong day.', 'Strong, just short of great.', 'Most of it done, done well.'],
+  ['A very strong day.', 'Close to everything.', 'Only a little left on the table.'],
+  ['Almost a full day.', 'So close to perfect.', 'A couple of loose ends, that is all.'],
+  ['One step from perfect.', 'Nearly everything. Nearly.', 'An excellent day with one small gap.'],
+  ['A perfect day.', 'Everything done. Full battery.', 'You did all of it. This is the standard.'],
+];
+const DD_GRADES = [[95, 'S', '#ffd36b'], [85, 'A', '#3fbf88'], [70, 'B', '#8fd4ff'], [55, 'C', '#ffb347'], [40, 'D', '#ff9a6b'], [0, 'F', '#ff6b6b']];
+const ddHash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+const ddHours = (key) => { const h = G.history[key]; let s = h ? Object.values(h.hours || {}).reduce((a, b) => a + (+b || 0), 0) : 0; if (key === dk() && typeof timerTodayMs === 'function') s += timerTodayMs() / 36e5; return s; };
+/* everything the dashboard says about a day, worked out once */
+function dayStats(key) {
+  const plan = dayPlan(key), h = G.history[key] || newDay(), done = h.completed || [], today = dk();
+  const isDone = p => done.includes(p.id), nd = plan.filter(isDone).length, n = plan.length;
+  const xpAll = plan.reduce((s, p) => s + (+p.xp || 0), 0), xpDone = plan.filter(isDone).reduce((s, p) => s + (+p.xp || 0), 0);
+  const avail = availFor(key), hrs = ddHours(key), hoursPct = Math.min(1, hrs / Math.max(1, avail * .5));
+  const pct = n ? Math.round(nd / n * 100) : null;
+  let score = n ? Math.round(60 * nd / n + 20 * (xpAll ? xpDone / xpAll : nd / n) + 20 * hoursPct) : null;
+  if (score != null && h.skipped) score = Math.min(score, 30);
+  const grade = score == null ? null : DD_GRADES.find(g => score >= g[0]);
+  const areas = {}; plan.forEach(p => { const a = areas[p.areaId] || (areas[p.areaId] = { n: 0, d: 0 }); a.n++; if (isDone(p)) a.d++; });
+  const timed = plan.filter(p => p.from), tDone = timed.filter(isDone).length;
+  const tClosed = timed.filter(p => !isDone(p) && (key < today || (key === today && winState(p) === 'missed'))).length;
+  const side = plan.filter(p => p.type === 'side'), dayOnly = plan.filter(p => p.dayOnly);
+  const atTimes = Object.values(h.at || {}).filter(Boolean).sort((a, b) => a - b);
+  return { key, plan, h, n, nd, pct, score, grade, xpAll, xpDone, avail, hrs, areas, timed, tDone, tClosed, side, dayOnly, atTimes, past: key < today, today: key === today, future: key > today };
+}
+/* average completion of the 7 days before this one (days with something planned) */
+function ddWeek(key) {
+  const v = []; for (let i = 1; i <= 7; i++) { const k = addDays(key, -i); if (k < (G.player.startDate || '')) break; const p = dayPct(k); if (p != null) v.push(p); }
+  return v.length ? { avg: Math.round(v.reduce((a, b) => a + b, 0) / v.length), max: Math.max(...v), n: v.length } : null;
+}
+function ddFeedback(S) {
+  if (S.n === 0) return { head: 'Nothing was planned for this day.', more: [] };
+  if (S.future) return { head: `${S.n} mission${S.n === 1 ? '' : 's'} planned.`, more: [`${S.avail} hours available.`] };
+  const band = Math.round(S.pct / 5), lines = DD_LINES[band], head = lines[ddHash(S.key) % lines.length];
+  const more = [], A = Object.entries(S.areas).map(([id, a]) => ({ id, ...a, name: (G.areas[id] || {}).name || id }));
+  const full = A.filter(a => a.n && a.d === a.n), none = A.filter(a => a.n && a.d === 0);
+  if (S.today && S.pct < 100) { const left = S.n - S.nd; more.push(`${left} mission${left === 1 ? '' : 's'} left, and ${hm(msLeftToday())} of today to do ${left === 1 ? 'it' : 'them'}.`); }
+  if (full.length === A.length && A.length > 1) more.push('Every life area got done.');
+  else if (full.length) more.push(`${full.map(a => a.name).join(', ')}: all done.`);
+  if (none.length) more.push(`${none.map(a => a.name).join(', ')} ${S.today ? 'still untouched' : 'skipped completely'}.`);
+  if (S.timed.length) {
+    if (S.tDone === S.timed.length) more.push(`All ${S.timed.length} timed mission${S.timed.length === 1 ? '' : 's'} done inside the window.`);
+    else if (S.tClosed) more.push(`${S.tClosed} timed mission${S.tClosed === 1 ? '' : 's'} closed before you got to ${S.tClosed === 1 ? 'it' : 'them'}.`);
+  }
+  if (S.atTimes.length && S.nd === S.n) { const last = new Date(S.atTimes[S.atTimes.length - 1]); if (last.getHours() < 12) more.push('Everything finished before noon.'); else if (last.getHours() < 17) more.push(`Last mission done at ${pad(last.getHours())}:${pad(last.getMinutes())}.`); }
+  else if (S.atTimes.length) { const first = new Date(S.atTimes[0]); if (first.getHours() < 8) more.push(`An early start: first mission at ${pad(first.getHours())}:${pad(first.getMinutes())}.`); else if (first.getHours() >= 20) more.push('Nothing got done until the evening.'); }
+  if (S.side.length) { const d = S.side.filter(p => S.h.completed.includes(p.id)).length; if (d) more.push(`${d} side quest${d === 1 ? '' : 's'} done on top.`); }
+  if (S.hrs >= .1) more.push(`${S.hrs.toFixed(1)} h tracked of ${S.avail} h available${S.hrs >= S.avail * .5 ? ', a full working day' : ''}.`);
+  else if (!S.today) more.push('No time was tracked.');
+  const W = ddWeek(S.key);
+  if (W && W.n >= 2) {
+    if (S.pct > W.max) more.push(`Best day of the week (previous best ${W.max}%).`);
+    else if (S.pct >= W.avg + 10) more.push(`Above your weekly average of ${W.avg}%.`);
+    else if (S.pct <= W.avg - 10) more.push(`Below your weekly average of ${W.avg}%.`);
+    else more.push(`Close to your weekly average of ${W.avg}%.`);
+  }
+  if (S.h.skipped) more.push(S.h.penalty ? `Counted as a missed day: −${fmt(S.h.penalty)} XP.` : 'Counted as a missed day. Your rank protected your XP.');
+  return { head, more: more.slice(0, 6) };
+}
+function ddHTML(key) {
+  const S = dayStats(key), F = ddFeedback(S), g = S.grade;
+  const bat = S.pct == null || S.future ? '' : `<span class="bat dd-bat ${batLvl(S.pct)}" style="--p:${S.pct}" role="img" aria-label="${S.pct}% of missions done"><i aria-hidden="true"><u></u></i><b>${S.pct}%</b></span>`;
+  const top = S.future || S.n === 0
+    ? `<div class="dd-top"><div class="dd-g"><b class="dd-up">${S.n ? S.n : '—'}</b><span>${S.n ? 'PLANNED' : 'NOTHING PLANNED'}</span></div>${bat}</div>`
+    : `<div class="dd-top" style="--gc:${g[2]}"><div class="dd-g"><b>${g[1]}</b><span><em>${S.score}</em> / 100${S.today ? '<br>SO FAR' : ''}</span></div>${bat}</div>`;
+  const fb = `<div class="dd-fb ${S.pct == null ? '' : batLvl(S.pct)}"><b>${esc(F.head)}</b>${F.more.length ? `<ul>${F.more.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div>`;
+  const k = (v, l) => `<div class="dd-k"><b>${v}</b><span>${l}</span></div>`;
+  const kpi = S.n ? `<div class="dd-kpi">${k(`${S.nd}/${S.n}`, 'MISSIONS')}${k((S.h.xpEarned >= 0 ? '+' : '') + fmt(S.h.xpEarned || 0), 'XP')}${k('+' + fmt(S.h.coinsEarned || 0) + ' $', 'MONEY')}${k(S.hrs.toFixed(1) + ' h', 'TRACKED')}</div>` : '';
+  const rows = Object.entries(S.areas).map(([id, a]) => { const ar = G.areas[id] || {}, p = Math.round(a.d / a.n * 100); return `<div class="dd-row" style="--c:${esc(ar.color || '#888')}"><span>${esc((ar.name || id).toUpperCase())}</span><u><s style="width:${p}%"></s></u><em>${a.d}/${a.n}</em></div>`; }).join('');
+  return `<div class="dd" data-dd="${key}">${top}${S.n && !S.future ? fb : S.future && S.n ? fb : ''}${kpi}${rows ? `<div class="dd-rows"><label>BY LIFE AREA</label>${rows}</div>` : ''}${S.score != null ? `<div class="dd-how">Score: 60 for missions done, 20 for how much of the XP you earned, 20 for hours tracked (half of the available hours counts as full). A missed day scores 30 at most.</div>` : ''}</div>`;
+}
+const _odpDD = openDayPanel;
+openDayPanel = function (key) {
+  const r = _odpDD.apply(this, arguments), pn = $('day-panel');
+  try {
+    pn.querySelectorAll('.dp-sec').forEach(s => { const l = s.querySelector(':scope > label'); if (l && /^SUMMARY$/.test(l.textContent.trim())) s.remove(); });   /* the dashboard says it better */
+    const head = pn.querySelector('.dp-head'); if (head) head.insertAdjacentHTML('afterend', ddHTML(key));
+  } catch (e) {}
+  return r;
+};
+/* today's dashboard stays live while it is open */
+const _ssDD = saveState;
+saveState = function () {
+  const r = _ssDD.apply(this, arguments);
+  try { const pn = $('day-panel'), d = pn && pn.classList.contains('open') && pn.querySelector('.dd'); if (d && d.dataset.dd === dk()) { const t = document.createElement('template'); t.innerHTML = ddHTML(dk()); d.replaceWith(t.content.firstElementChild); } } catch (e) {}
+  return r;
+};
+
+/* ══════════════════════════════════════════════════════
+   v0.15.4  ·  ONE KIND OF GOAL
+   Every goal can have all of these, and you use only what you need:
+   · milestones: big checkpoints you tick off
+   · goal missions: real missions that belong to this goal (they show in the area with a GOAL tag)
+   · a count: how many goal missions done it takes (optional)
+   · a number to track, start to target (kept for goals that were number goals)
+   · a daily check: "did I do something for this today?" — a goal mission done counts too — and a streak
+   · a consistency target over a window of days, with reward or penalty (kept for goals that were habit goals)
+   Progress is a percentage: the average of the milestone, count and number parts that are in use.
+   ══════════════════════════════════════════════════════ */
+GTYPE.combo = 'GOAL';
+const _ngCombo = normGoal;
+normGoal = function (g, areas) {
+  const o = _ngCombo.apply(this, arguments); if (!o) return o;
+  const was = g.type;
+  o.cTarget = clamp(Math.round(+g.cTarget || 0), 0, 100000);
+  o.num = g.num != null ? !!g.num : was === 'number' && (o.start !== 0 || o.target !== 100 || o.adj !== 0 || (o.log || []).length > 1 || o.links.length > 0);
+  o.hab = g.hab != null ? !!g.hab : was === 'habit';
+  if (was === 'habit' && g.deadline) o.deadline = g.deadline;
+  o.type = 'combo';
+  return o;
+};
+/* goal missions remember their goal */
+const _nmGoal = normMission;
+normMission = function (m, start) { const r = _nmGoal.apply(this, arguments); if (m && m.goal) r.goal = String(m.goal); return r; };
+const goalMissions = g => (G.missions[g.area] || []).filter(m => m.goal === g.id);
+const goalOf = m => m && m.goal ? goalById(m.goal) : null;
+/* the parts of a goal that make up its percentage */
+function goalParts(g) {
+  const p = [];
+  if (g.steps.length) p.push({ k: 'ms', f: g.steps.filter(s => s.done).length / g.steps.length, label: `${g.steps.filter(s => s.done).length} / ${g.steps.length} milestones` });
+  if (g.cTarget > 0) { const n = linkedCount(g); p.push({ k: 'ct', f: Math.min(1, n / g.cTarget), label: `${fmt(n)} / ${fmt(g.cTarget)} done` }); }
+  if (g.num) { const d = g.target - g.start; p.push({ k: 'nm', f: d ? clamp((goalVal(g) - g.start) / d, 0, 1) : 1, label: `${fmt(Math.round(goalVal(g) * 100) / 100)} of ${fmt(g.target)}` }); }
+  return p;
+}
+function goalStreak(g) {
+  let d = dk(), n = 0; if (!dayGreen(g, d)) d = addDays(d, -1);
+  for (let i = 0; i < 2000 && d >= g.startDate && dayGreen(g, d); i++) { n++; d = addDays(d, -1); }
+  return n;
+}
+const _gfCombo = goalFrac;
+goalFrac = function (g) {
+  if (g.type !== 'combo') return _gfCombo.apply(this, arguments);
+  const p = goalParts(g); if (p.length) return p.reduce((s, x) => s + x.f, 0) / p.length;
+  return g.hab ? clamp(habitWin(g, dk()).pct / 100, 0, 1) : 0;
+};
+const _gdCombo = goalDone;
+goalDone = function (g) { if (g.type !== 'combo') return _gdCombo.apply(this, arguments); const p = goalParts(g); return p.length > 0 && p.every(x => x.f >= 1); };
+const _giCombo = goalInfo;
+goalInfo = function (g) {
+  if (g.type !== 'combo') return _giCombo.apply(this, arguments);
+  const today = dk(), col = (G.areas[g.area] || {}).color || '#888', parts = goalParts(g), frac = goalFrac(g), st = goalStreak(g);
+  const o = { col, frac, mark: null, main: '', sub: '', pill: '', cls: '', note: '', streak: st };
+  const left = g.deadline ? diffDays(today, g.deadline) : null;
+  const dl = left == null ? 'NO DEADLINE' : left >= 0 ? `${left} ${left === 1 ? 'DAY' : 'DAYS'} LEFT` : `PAST DEADLINE${g.status === 'active' ? ' · GRACE' : ''}`;
+  if (parts.length) {
+    o.main = Math.round(frac * 100) + '%'; o.sub = parts.map(x => x.label).join(' · ');
+    if (g.deadline) { const tot = Math.max(1, diffDays(g.startDate, g.deadline)), el = clamp(diffDays(g.startDate, today), 0, tot); o.mark = el / tot; const ok = frac + 1e-9 >= o.mark; o.pill = ok ? 'ON TRACK' : 'BEHIND'; o.cls = ok ? 'ok' : 'bad'; }
+    else { o.pill = st ? `${st}-DAY STREAK` : 'OPEN'; o.cls = st ? 'ok' : ''; }
+  } else if (g.hab) { const w = habitWin(g, today); o.main = Math.round(w.pct) + '%'; o.sub = `of days · target ${g.targetPct}%`; o.mark = g.targetPct / 100; o.pill = w.pct >= g.targetPct ? 'ON TRACK' : 'BELOW TARGET'; o.cls = w.pct >= g.targetPct ? 'ok' : 'bad'; }
+  else { o.main = String(st); o.sub = st === 1 ? 'day streak' : 'day streak'; o.pill = dayGreen(g, today) ? 'DONE TODAY' : 'NOT YET TODAY'; o.cls = dayGreen(g, today) ? 'ok' : ''; }
+  o.note = [dl, st && parts.length ? `STREAK ${st}` : ''].filter(Boolean).join(' · ');
+  if (g.status === 'done') { o.pill = 'DONE'; o.cls = 'ok'; o.frac = 1; }
+  if (g.status === 'failed') { o.pill = 'MISSED'; o.cls = 'bad'; }
+  return o;
+};
+const _gsCombo = goalSummary;
+goalSummary = function (g) { if (g.type !== 'combo') return _gsCombo.apply(this, arguments); const i = goalInfo(g), n = goalMissions(g).length; return `${g.size.toUpperCase()} · ${i.main}${n ? ` · ${n} MISSION${n === 1 ? '' : 'S'}` : ''} · ${i.pill}`; };
+
+/* ── the goal view ── */
+function goalDays(g, n) {
+  const out = [], t = dk();
+  for (let i = n - 1; i >= 0; i--) { const d = addDays(t, -i); if (d < g.startDate) { out.push(`<i class="gd0" title="${esc(d)}"></i>`); continue; } const y = dayGreen(g, d); out.push(`<i class="${y ? 'y' : d < t ? 'n' : ''}" title="${esc(prettyDate(d))}${y ? ' · done' : ''}"></i>`); }
+  return out.join('');
+}
+function renderGoalCombo(g) {
+  const box = $('goal-body'), a = G.areas[g.area], i = goalInfo(g), act = g.status === 'active', today = dk(), parts = goalParts(g), gms = goalMissions(g);
+  const done = ((G.history[today] || {}).completed || []), green = dayGreen(g, today), mCheck = g.checks[today] === 1;
+  const pct = Math.round(i.frac * 100);
+  const ring = `<div class="gx-ring" style="--p:${pct};--c:${esc(i.col)}"><b>${esc(i.main)}</b><span>${parts.length ? 'COMPLETE' : g.hab ? 'OF DAYS' : 'DAY STREAK'}</span></div>`;
+  const pen = g.penalty ? `${G.rules.pen[g.size]}% of XP and money (${g.size})` : 'none';
+  const sec = (t, body, extra = '') => `<section class="gx-sec"><h4>${t}${extra}</h4>${body}</section>`;
+  let html = `<div class="ov-head"><div class="mono">${esc((a ? a.name : '').toUpperCase())} · GOAL</div><h3>${esc(g.name)}</h3></div>
+    <div class="gx-hero" style="--c:${esc(i.col)}">${ring}<div class="gx-hi"><span class="gl-pill ${i.cls}">${esc(i.pill)}</span><div class="gx-sub">${esc(i.sub)}</div>
+      <div class="gl-bar"><u style="width:${(i.frac * 100).toFixed(1)}%"></u>${i.mark != null ? `<i style="left:${(i.mark * 100).toFixed(1)}%" title="Where you should be by today"></i>` : ''}</div><div class="gc-note">${esc(i.note)}</div></div></div>`;
+  /* daily check */
+  html += sec('DID I DO SOMETHING FOR IT TODAY?', `<div class="gx-check"><button type="button" class="gx-cb ${green ? 'on' : ''}" data-gx="chk" ${act ? '' : 'disabled'} aria-pressed="${green}">${green ? '✓ DONE TODAY' : '✓ I DID SOMETHING TODAY'}</button>
+      <div class="gx-st"><b>${i.streak}</b><span>DAY STREAK</span></div></div>
+      <div class="gx-days" aria-label="The last 21 days">${goalDays(g, 21)}</div>
+      <div class="dim sm">${green && !mCheck ? 'A goal mission done today already counts.' : 'Tap it once when you did anything for this goal. A goal mission done counts too.'}</div>`);
+  /* milestones */
+  if (g.steps.length) html += sec('MILESTONES', `<div class="gl-steps">${g.steps.map(s => `<button type="button" class="m-step ${s.done ? 'on' : ''}" role="checkbox" aria-checked="${s.done}" data-gl="step" data-s="${esc(s.id)}" ${act || g.status === 'done' ? '' : 'disabled'}><i></i><span>${esc(s.t)}</span></button>`).join('')}</div>`, `<em>${g.steps.filter(s => s.done).length} / ${g.steps.length}</em>`);
+  /* goal missions */
+  const gmRows = gms.map(m => {
+    const due = isDue(m, today), dn = done.includes(m.id), cnt = Object.keys(G.history).filter(k => k >= g.startDate && (G.history[k].completed || []).includes(m.id)).length;
+    return `<div class="gx-m ${dn ? 'done' : ''}"><button type="button" class="m-check" role="checkbox" aria-checked="${dn}" data-gx="gm" data-m="${esc(m.id)}" ${due && act ? '' : 'disabled'} aria-label="${dn ? 'Undo' : 'Complete'} ${esc(m.title)}"></button>
+      <div class="gx-mt"><b>${esc(m.title)}</b><span>${esc(repeatText(m))} · +${fmt(m.xp)} XP · DONE ${fmt(cnt)}×</span></div><em>${dn ? 'DONE' : due ? 'TODAY' : 'NOT TODAY'}</em></div>`;
+  }).join('');
+  html += sec('GOAL MISSIONS', gms.length ? `<div class="gx-ms">${gmRows}</div>` : `<div class="dim sm">No goal missions yet. Add them in Developer mode: they work like normal missions, and every one you finish moves this goal.</div>`,
+    g.cTarget > 0 ? `<em>${fmt(linkedCount(g))} / ${fmt(g.cTarget)}</em>` : '');
+  /* number */
+  if (g.num) html += sec('YOUR NUMBER', `${goalChart(g)}<div class="gl-in"><input id="gl-val" type="number" step="any" value="${Math.round(goalVal(g) * 100) / 100}" ${act ? '' : 'disabled'} aria-label="Your number"><button class="btn sm" data-gl="save" ${act ? '' : 'disabled'}>SAVE</button></div>`);
+  /* consistency */
+  if (g.hab) { const w = habitWin(g, today); html += sec('CONSISTENCY', `<div class="gx-win"><b>${Math.round(w.pct)}%</b><span>of days in this window · target ${g.targetPct}% · day ${Math.min(w.e, g.windowDays)} of ${g.windowDays}</span></div>${g.winHist.length ? `<div class="dim sm">Past windows: ${g.winHist.slice(-6).map(x => `${x.pct}% ${x.hit ? '✓' : '✗'}`).join(' · ')}</div>` : ''}`); }
+  html += `<div class="gl-facts"><div><span>REWARD</span><b>+${fmt(g.rewardXp)} XP · +${fmt(g.rewardCoins)}${g.hab && !parts.length ? ' per window' : ''}</b></div><div><span>IF MISSED</span><b>${esc(pen)}</b></div>${g.deadline ? `<div><span>DEADLINE</span><b>${esc(g.deadline)} · ${g.grace} grace day${g.grace === 1 ? '' : 's'}</b></div>` : ''}<div><span>STARTED</span><b>${esc(g.startDate)}</b></div></div>
+    <div class="gl-btns"><button class="btn sm" data-gx="edit">EDIT GOAL</button>${g.status === 'active' && g.deadline && g.ext < 1 ? `<button class="btn sm" data-gl="extend">EXTEND 7 DAYS · ${G.rules.extendCost} MONEY</button>` : ''}${g.status === 'done' ? '<button class="btn sm" data-gl="reopen">REOPEN (TAKES THE REWARD BACK)</button>' : ''}</div>`;
+  const sc = $('goal-overlay').querySelector('.overlay-content'), top = sc ? sc.scrollTop : 0;
+  box.innerHTML = html; if (sc) sc.scrollTop = top;
+}
+const _rgCombo = renderGoal;
+renderGoal = function () { const g = goalById(goalCur); if (g && g.type === 'combo') return renderGoalCombo(g); return _rgCombo.apply(this, arguments); };
+$('goal-overlay').addEventListener('click', e => {
+  const b = e.target.closest('[data-gx]'), g = goalById(goalCur); if (!b || !g || b.disabled) return;
+  e.stopPropagation(); const k = b.dataset.gx, t = dk();
+  if (k === 'chk') { if (g.checks[t] === 1) delete g.checks[t]; else if (dayGreen(g, t)) { showToast('A GOAL MISSION ALREADY COUNTS TODAY'); return; } else g.checks[t] = 1; saveState(); sfx(g.checks[t] === 1 ? 'claim' : 'tick'); }
+  else if (k === 'gm') { const m = (G.missions[g.area] || []).find(x => x.id === b.dataset.m); if (!m) return; const dn = (G.history[t] || { completed: [] }).completed.includes(m.id); if (dn) { confirmBox('Undo this goal mission for today?', 'UNDO', () => { undoMission(g.area, m.id); renderGoal(); refreshAll(); }); return; } completeMission(g.area, m.id); }
+  else if (k === 'edit') { closeOverlay('goal-overlay'); openOverlay('dev-overlay'); dvNav('edit', () => { devArea = g.area; hubSel = { k: 'g', id: g.id }; }); return; }
+  renderGoal(); refreshAll();
+}, true);
+
+/* the window check also runs for goals with a consistency target, and they still have deadlines */
+const _egCombo = evalGoals;
+evalGoals = function () {
+  const hab = G.goals.filter(g => g.type === 'combo' && g.hab);
+  hab.forEach(g => { g.type = 'habit'; g._dl = g.deadline; });
+  try { _egCombo.apply(this, arguments); } finally { hab.forEach(g => { g.type = 'combo'; g.deadline = g._dl; delete g._dl; }); }
+  /* deadlines for goals that also have a consistency target */
+  const today = dk(); let ch = false;
+  hab.forEach(g => { if (g.status === 'active' && g.deadline && goalParts(g).length && today > addDays(g.deadline, g.grace)) { g.status = 'failed'; g.failedAt = today; ch = true; if (g.penalty) { const p = applyPenalty(g, today); notice = (notice ? notice + '  ·  ' : '') + `GOAL MISSED: ${g.name.toUpperCase()}   −${fmt(p.xp)} XP`; } } });
+  if (checkGoals() || ch) saveState();
+};
+/* a goal with a deadline but no parts never fails on its own; goals finish when every part is full */
+const _gacCombo = goalsAfterChange;
+goalsAfterChange = function () { const r = _gacCombo.apply(this, arguments); try { if (checkGoals()) saveState(); } catch (e) {} return r; };
+
+/* ── missions page: goal missions carry a GOAL tag ── */
+const _mhGoal = missionHTML;
+missionHTML = function (p, done) {
+  const h = _mhGoal.apply(this, arguments);
+  try { const m = !p.dayOnly && (G.missions[p.areaId] || []).find(x => x.id === p.id), g = goalOf(m); if (!g) return h;
+    return h.replace('<div class="m-ft">', `<div class="m-ft"><span class="m-goal" style="--c:${esc((G.areas[g.area] || {}).color || '#c7a8ff')}">GOAL · ${esc(g.name.toUpperCase())}</span>`); } catch (e) { return h; }
+};
+
+/* ── Developer: one goal form ── */
+const GM_REP = [['day', 1, 'Every day'], ['day', 2, 'Every 2 days'], ['week', 1, 'Every week']];
+const _dgrCombo = devGoalRow;
+devGoalRow = function (g) {
+  if (g.type !== 'combo' || !devOpen.has(g.id)) return _dgrCombo.apply(this, arguments);
+  const at = `data-id="${esc(g.id)}"`, f = (k, extra) => `data-act="gf" ${at} data-f="${k}" ${extra || ''}`, ms = G.missions[g.area] || [], gms = goalMissions(g);
+  const yes = (k, on) => `<select ${f(k)}><option value="1" ${on ? 'selected' : ''}>On</option><option value="0" ${on ? '' : 'selected'}>Off</option></select>`;
+  const body = `<div class="dm-ed gx-ed">
+    <label>NAME</label><input type="text" maxlength="60" ${f('name')} value="${esc(g.name)}">
+    <div class="grid3"><div><label>AREA</label><select ${f('area')}>${areaOpts(g.area)}</select></div><div><label>SIZE (SETS THE PENALTY)</label><select ${f('size')}>${GOAL_SIZES.map(t => `<option value="${t[0]}" ${t[0] === g.size ? 'selected' : ''}>${t[1]} · ${G.rules.pen[t[0]]}%</option>`).join('')}</select></div></div>
+    <label>MILESTONES <span class="dim">big checkpoints; ticking them fills the goal</span></label>
+    ${g.steps.map(s => `<div class="stp"><input type="text" maxlength="80" data-act="gs" ${at} data-sid="${esc(s.id)}" value="${esc(s.t)}" aria-label="Milestone"><button class="x" data-act="gs-del" ${at} data-sid="${esc(s.id)}" aria-label="Delete milestone">×</button></div>`).join('')}
+    <div class="stp"><input type="text" maxlength="80" placeholder="New milestone…" data-gsnew="${esc(g.id)}" aria-label="New milestone"><button class="btn sm" data-act="gs-add" ${at}>ADD</button></div>
+    <label>GOAL MISSIONS <span class="dim">real missions for this goal only; they show in ${esc((G.areas[g.area] || {}).name || 'the area')} with a GOAL tag</span></label>
+    ${gms.map(m => `<div class="gx-dm"><span class="t">${esc(m.title)}<small>${esc(repeatText(m))} · +${fmt(m.xp)} XP · +${fmt(m.coins)} $</small></span><button class="btn sm" data-act="gm-edit" ${at} data-m="${esc(m.id)}">EDIT</button><button class="x" data-act="gm-del" ${at} data-m="${esc(m.id)}" aria-label="Delete ${esc(m.title)}">×</button></div>`).join('')}
+    <div class="gx-add"><input type="text" maxlength="80" placeholder="New goal mission…" data-gmnew="${esc(g.id)}" aria-label="New goal mission title">
+      <select data-gmrep="${esc(g.id)}" aria-label="How often">${GM_REP.map((r, i) => `<option value="${i}">${r[2]}</option>`).join('')}</select>
+      <input type="number" min="0" max="10000" step="5" value="50" data-gmxp="${esc(g.id)}" aria-label="XP"><button class="btn sm" data-act="gm-add" ${at}>ADD</button></div>
+    <div class="grid3"><div><label>GOAL MISSIONS DONE TO FINISH (0 = NOT USED)</label><input type="number" min="0" max="100000" ${f('cTarget')} value="${g.cTarget}"></div><div><label>STARTS ON</label><input type="date" ${f('startDate')} value="${esc(g.startDate)}"></div><div><label>DEADLINE (EMPTY = OPEN)</label><input type="date" ${f('deadline')} value="${esc(g.deadline)}"></div></div>
+    <label>ALSO COUNT THESE MISSIONS <span class="dim">normal missions that move this goal and its daily check</span></label>
+    <div class="chips">${ms.filter(m => m.goal !== g.id).map(m => `<button class="chip ${g.links.includes(m.id) ? 'on' : ''}" data-act="gl" ${at} data-m="${esc(m.id)}">${esc(m.title)}</button>`).join('') || '<span class="dim sm">No other missions in this area.</span>'}</div>
+    <div class="grid3"><div><label>TRACK A NUMBER</label>${yes('num', g.num)}</div>${g.num ? `<div><label>START VALUE</label><input type="number" step="any" ${f('start')} value="${g.start}"></div><div><label>TARGET VALUE</label><input type="number" step="any" ${f('target')} value="${g.target}"></div>` : ''}</div>
+    <div class="grid3"><div><label>CONSISTENCY TARGET</label>${yes('hab', g.hab)}</div>${g.hab ? `<div><label>WINDOW (DAYS, 7 TO 90)</label><input type="number" min="7" max="90" ${f('windowDays')} value="${g.windowDays}"></div><div><label>TARGET % OF DAYS</label><input type="number" min="10" max="100" ${f('targetPct')} value="${g.targetPct}"></div>` : ''}</div>
+    <div class="grid3"><div><label>GRACE DAYS</label><input type="number" min="0" max="14" ${f('grace')} value="${g.grace}"></div><div><label>REWARD XP</label><input type="number" min="0" max="10000" step="25" ${f('rewardXp')} value="${g.rewardXp}"></div><div><label>REWARD MONEY</label><input type="number" min="0" max="5000" step="5" ${f('rewardCoins')} value="${g.rewardCoins}"></div></div>
+    <div class="grid3"><div><label>PENALTY IF MISSED</label><select ${f('penalty')}><option value="1" ${g.penalty ? 'selected' : ''}>On</option><option value="0" ${g.penalty ? '' : 'selected'}>Off</option></select></div></div>
+    <div class="dm-foot" style="gap:.5rem;flex-wrap:wrap">${g.status === 'done' ? `<button class="btn sm" data-act="g-reopen" ${at}>REOPEN</button>` : ''}${g.status === 'failed' ? `<button class="btn sm" data-act="g-restart" ${at}>RESTART</button>` : ''}<button class="btn sm danger" data-act="g-del" ${at}>DELETE GOAL</button></div>
+  </div>`;
+  return `<div class="dm open" data-id="${esc(g.id)}"><div class="dm-row" data-act="m-toggle" ${at}><span class="dm-t">${esc(g.name)}</span><span class="mono dim sm dm-sum">${esc(goalSummary(g))}</span><span class="chev"></span></div>${body}</div>`;
+};
+/* the goal editor shows everything in one calm form (no more/fewer split) */
+const _debCombo = dvEditBody;
+dvEditBody = function (a) {
+  const k = hubSel && hubSel.k, g = k === 'g' && goalById(hubSel.id);
+  if (!g || g.type !== 'combo') return _debCombo.apply(this, arguments);
+  const had = devOpen.has(g.id); devOpen.add(g.id); const h = devGoalRow(g); if (!had) devOpen.delete(g.id);
+  const t = document.createElement('template'); t.innerHTML = h; const ed = t.content.querySelector('.dm-ed');
+  return ['Edit goal', `<div class="dm open dv-dm" data-id="${esc(g.id)}"><div class="dm-row" style="display:none"><span class="dm-t"></span><span class="dm-sum"></span></div>${dvForm(ed ? ed.innerHTML : '', '')}</div>`];
+};
+const _ugCombo = updateGoal;
+updateGoal = function (g, f, v) {
+  if (f === 'cTarget') { g.cTarget = clamp(Math.round(+v || 0), 0, 100000); saveState(); return; }
+  if (f === 'num' || f === 'hab') { g[f] = String(v) === '1'; if (f === 'num' && g.num && !g.log.length) g.log = [{ d: dk(), v: g.start }]; if (f === 'hab' && g.hab) { g.winEval = Math.max(g.winEval, Math.floor(diffDays(g.startDate, dk()) / g.windowDays)); } saveState(); renderDevMode(true); return; }
+  if (f === 'area' && G.areas[v] && g.area !== v) { goalMissions(g).forEach(m => { G.missions[g.area] = G.missions[g.area].filter(x => x.id !== m.id); (G.missions[v] = G.missions[v] || []).push(m); }); const keep = goalMissions({ ...g, area: v }).map(m => m.id); const r = _ugCombo.apply(this, arguments); g.links = keep; return r; }
+  if (f === 'deadline' && g.type === 'combo') { g.deadline = /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : ''; saveState(); return; }
+  return _ugCombo.apply(this, arguments);
+};
+$('dev-overlay').addEventListener('click', e => {
+  const b = e.target.closest('[data-act^="gm-"]'); if (!b) return;
+  const g = goalById(b.dataset.id); if (!g) return; e.stopImmediatePropagation();
+  const act = b.dataset.act;
+  if (act === 'gm-add') {
+    const sec = b.closest('.gx-add'), inp = sec.querySelector('[data-gmnew]'), t = inp.value.trim(); if (!t) { showToast('TYPE A MISSION TITLE'); inp.focus(); return; }
+    const r = GM_REP[+sec.querySelector('[data-gmrep]').value] || GM_REP[0], xp = clamp(Math.round(+sec.querySelector('[data-gmxp]').value || 0), 0, 10000);
+    const m = normMission({ title: t, xp, coins: Math.round(xp / 5), repeat: { every: r[1], unit: r[0], days: r[0] === 'week' ? [wd(dk())] : [] }, goal: g.id }, dk());
+    m.goal = g.id; (G.missions[g.area] = G.missions[g.area] || []).push(m); g.links.push(m.id);
+    saveState(); sfx('claim'); renderDevMode(true);
+    const n = document.querySelector(`#dev-overlay [data-gmnew="${CSS.escape(g.id)}"]`); if (n) n.focus();
+  } else if (act === 'gm-del') {
+    const m = (G.missions[g.area] || []).find(x => x.id === b.dataset.m); if (!m) return;
+    confirmBox(`Delete the goal mission <b>${esc(m.title)}</b>?<br>What you already did with it still counts.`, 'DELETE', () => { G.missions[g.area] = G.missions[g.area].filter(x => x.id !== m.id); saveState(); renderDevMode(true); });
+  } else if (act === 'gm-edit') { const mid = b.dataset.m; dvNav('edit', () => { devArea = g.area; hubSel = { k: 'm', id: mid }; }); }
+}, true);
+$('dev-overlay').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches && e.target.matches('[data-gmnew]')) { e.preventDefault(); const b = e.target.closest('.gx-add').querySelector('[data-act="gm-add"]'); if (b) b.click(); } });
+/* new goals are the combined kind */
+const _hafCombo = hubAddForm;
+hubAddForm = function (kind, a) {
+  const h = _hafCombo.apply(this, arguments); if (kind !== 'newG') return h;
+  return h.replace(/<div class="dim sm">Number goals[^<]*<\/div>/, '<div class="dim sm">Name it. Then add milestones, goal missions and a deadline if you want one.</div>')
+          .replace(/<div><label>TYPE<\/label><select data-gtype[^>]*>[\s\S]*?<\/select><\/div>/, `<input type="hidden" data-gtype="${esc(a.id)}" value="combo">`);
+};
+const _dgCombo = devGoals;
+devGoals = function () { return _dgCombo.apply(this, arguments).replace(/<select data-gtype="([^"]*)"[^>]*>[\s\S]*?<\/select>/g, '<input type="hidden" data-gtype="$1" value="combo">').replace(/Goals are yours to add\.[^<]*/, 'Goals are yours to add. Each goal can have milestones, goal missions, a daily check and a deadline. The penalty is taken once when a goal is missed.'); };
+
+/* ══════════════════════════════════════════════════════
+   v0.15.5  ·  STORE: three kinds of reward, a real inventory
+   ONE-TIME: buy it, claim it when you take it.
+   COUNT:    each purchase adds to a balance ("2 left"); USE takes one.
+   TIME:     each purchase adds minutes to a balance; USE starts a countdown you can pause; STOP gives the rest back.
+   Optional daily limit per reward. Every purchase and use goes into a history.
+   ══════════════════════════════════════════════════════ */
+const RW_KINDS = [['once', 'One-time'], ['count', 'Count'], ['time', 'Time']];
+function rwGuess(r) { const n = String(r.name || '').toLowerCase(); if (/\bhours?\b/.test(n)) return { kind: 'time', amt: 60 * (/(\d+)\s*hours?/.test(n) ? +n.match(/(\d+)\s*hours?/)[1] : 1) }; if (/(\d+)\s*min/.test(n)) return { kind: 'time', amt: +n.match(/(\d+)\s*min/)[1] }; return { kind: 'once', amt: 1 }; }
+function rwNorm(r) {
+  if (!r || typeof r !== 'object') return r;
+  if (!RW_KINDS.some(k => k[0] === r.kind)) Object.assign(r, rwGuess(r));
+  r.amt = clamp(Math.round(+r.amt || (r.kind === 'time' ? 60 : 1)), 1, r.kind === 'time' ? 1440 : 100);
+  r.cap = clamp(Math.round(+r.cap || 0), 0, r.kind === 'time' ? 1440 : 100);
+  return r;
+}
+const _nsInv = normStore;
+normStore = function (s) {
+  const o = _nsInv.apply(this, arguments);
+  o.rewards.forEach(rwNorm);
+  o.bal = s && s.bal && typeof s.bal === 'object' ? s.bal : {};
+  o.log = Array.isArray(s && s.log) ? s.log.slice(-300) : [];
+  o.run = s && s.run && s.run.rid ? s.run : null;
+  /* unclaimed purchases of a count or time reward move into its balance */
+  o.inv = o.inv.filter(x => { const r = o.rewards.find(y => y.id === x.rid); if (!x.claimed && r && r.kind !== 'once') { const b = o.bal[r.id] || (o.bal[r.id] = { n: 0, name: r.name }); b.n += r.amt; return false; } return true; });
+  return o;
+};
+if (G) G.store = normStore(G.store);
+const rwById = id => G.store.rewards.find(r => r.id === id);
+const invFmt = (r, n) => r && r.kind === 'time' ? (n >= 60 ? `${Math.floor(n / 60)} h${n % 60 ? ' ' + (n % 60) + ' m' : ''}` : `${Math.round(n)} m`) : `${n} left`;
+const invAmt = r => r.kind === 'time' ? `+${invFmt(r, r.amt)}` : r.kind === 'count' ? `+${r.amt}` : 'ONE-TIME';
+function invLog(kind, r, amt, extra) { G.store.log.push(Object.assign({ t: Date.now(), d: dk(), k: kind, rid: r.id, name: r.name, amt }, extra || {})); if (G.store.log.length > 300) G.store.log.shift(); }
+/* how much of a reward was used today (minutes or count) */
+function invUsedToday(rid) { const t = dk(); let n = G.store.log.filter(x => x.d === t && x.rid === rid && x.k === 'use').reduce((s, x) => s + (+x.amt || 0), 0); const R = G.store.run; if (R && R.rid === rid && R.day === t) n += (R.take - invRunLeft() / 60000); return Math.round(n * 10) / 10; }
+const invCapLeft = r => r.cap ? Math.max(0, r.cap - invUsedToday(r.id)) : Infinity;
+
+/* buying */
+const _brInv = buyReward;
+buyReward = function (id) {
+  const r = liveRewards().find(x => x.id === id); if (!r) return;
+  if (r.kind === 'once') { const res = _brInv.apply(this, arguments); invLog('buy', r, 1, { price: r.price }); saveState(); return res; }
+  if (G.player.money < r.price) { showToast('NOT ENOUGH MONEY'); return; }
+  G.player.money -= r.price;
+  const b = G.store.bal[r.id] || (G.store.bal[r.id] = { n: 0, name: r.name }); b.n += r.amt; b.name = r.name;
+  invLog('buy', r, r.amt, { price: r.price });
+  if (G.store.goal === r.id) G.store.goal = null;
+  saveState(); sfx('claim'); showToast(`BOUGHT  ${r.name.toUpperCase()}  ${invAmt(r)}`); renderStore();
+};
+const _ciInv = claimItem;
+claimItem = function (id) { const x = G.store.inv.find(v => v.id === id); const r = x && (rwById(x.rid) || { id: x.rid, name: x.name }); const res = _ciInv.apply(this, arguments); if (x && x.claimed && r) { invLog('claim', r, 1); saveState(); } return res; };
+
+/* using a count reward */
+function invUseCount(rid) {
+  const r = rwById(rid), b = G.store.bal[rid]; if (!r || !b || b.n < 1) return;
+  if (invCapLeft(r) < 1) { showToast(`DAILY LIMIT REACHED · ${r.cap} A DAY`); sfx('deny'); return; }
+  b.n -= 1; invLog('use', r, 1); saveState(); sfx('claim'); showToast(`USED 1  ${r.name.toUpperCase()} · ${invFmt(r, b.n)}`); renderStore();
+}
+/* time rewards: one countdown at a time */
+const invRunLeft = () => { const R = G.store.run; if (!R) return 0; return Math.max(0, R.st === 'run' ? R.end - Date.now() : R.left); };
+function invStart(rid, mins) {
+  const r = rwById(rid), b = G.store.bal[rid]; if (!r || !b) return;
+  if (G.store.run) { showToast('ONE COUNTDOWN AT A TIME · STOP THE OTHER FIRST'); return; }
+  const cap = invCapLeft(r), take = Math.min(b.n, mins, cap);
+  if (cap <= 0) { showToast(`DAILY LIMIT REACHED · ${invFmt(r, r.cap).replace(' left', '')} A DAY`); sfx('deny'); return; }
+  if (take <= 0) return;
+  b.n = Math.round((b.n - take) * 100) / 100;
+  G.store.run = { rid, name: r.name, take, day: dk(), st: 'run', end: Date.now() + take * 60000, left: take * 60000 };
+  saveState(); sfx('tStart'); renderStore();
+}
+function invPause() { const R = G.store.run; if (!R) return; if (R.st === 'run') { R.left = invRunLeft(); R.st = 'pause'; sfx('tPause'); } else { R.end = Date.now() + R.left; R.st = 'run'; sfx('tStart'); } saveState(); renderStore(); }
+function invStop(done) {
+  const R = G.store.run; if (!R) return; const r = rwById(R.rid) || { id: R.rid, name: R.name, kind: 'time' };
+  const leftMin = Math.round(invRunLeft() / 600) / 100, used = Math.round((R.take - leftMin) * 100) / 100;
+  if (leftMin > 0) { const b = G.store.bal[R.rid] || (G.store.bal[R.rid] = { n: 0, name: R.name }); b.n = Math.round((b.n + leftMin) * 100) / 100; }
+  if (used > 0) invLog('use', r, used);
+  G.store.run = null; saveState();
+  if (done) { sfx('tFinish'); showToast(`TIME IS UP · ${R.name.toUpperCase()}`); try { nfLog('store', `${R.name}: time is up`, `${invFmt(r, Math.round(used))} used.`); } catch (e) {} try { if (TC.notif && 'Notification' in window && Notification.permission === 'granted' && document.hidden) new Notification('LIFE · time is up', { body: R.name }); } catch (e) {} }
+  else showToast(leftMin > 0 ? `STOPPED · ${invFmt(r, Math.round(leftMin))} BACK IN YOUR BALANCE` : 'STOPPED');
+  if (curPage === 'pg-store') renderStore();
+}
+if (typeof NF_KINDS !== 'undefined' && !NF_KINDS.store) NF_KINDS.store = ['STORE', '#ffcf5c', '<path d="M5 9h14l-1 11H6z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/>', 'missions'];
+/* the countdown keeps going with the app clock, and ends even if the app was closed */
+let invTickAt = 0;
+const _tickInv = tick;
+tick = function () {
+  const r = _tickInv.apply(this, arguments);
+  try { const R = G && G.store.run; if (R && R.st === 'run') { if (invRunLeft() <= 0) invStop(true); else if (curPage === 'pg-store' && Date.now() - invTickAt > 900) { invTickAt = Date.now(); const el = document.querySelector('#store-body [data-inv-left]'); if (el) el.textContent = tcCd(invRunLeft()); const u = document.querySelector('#store-body .inv-run .gl-bar u'); if (u) u.style.width = (invRunLeft() / (R.take * 60000) * 100).toFixed(1) + '%'; } } } catch (e) {}
+  return r;
+};
+
+/* ── what the store shows ── */
+const _rsInv = renderStore;
+renderStore = function () {
+  G.store.rewards.forEach(rwNorm);
+  const res = _rsInv.apply(this, arguments), S = G.store, body = $('store-body');
+  try {
+    if (storeTab === 'shelf') {
+      body.querySelectorAll('[data-act="buy"]').forEach(b => { const r = rwById(b.dataset.id); const card = b.closest('.sc'); if (!r || !card) return; card.dataset.kind = r.kind; card.querySelector('.mono').insertAdjacentHTML('afterend', `<span class="sc-kind k-${r.kind}">${esc(invAmt(r))}${r.cap ? ` · MAX ${r.kind === 'time' ? invFmt(r, r.cap).replace(' left', '') : r.cap} A DAY` : ''}</span>`); const own = S.bal[r.id]; if (own && own.n > 0) card.insertAdjacentHTML('beforeend', `<span class="sc-own">YOU HAVE ${esc(invFmt(r, Math.round(own.n)))}</span>`); });
+    } else if (storeTab === 'pack') {
+      const R = S.run, runR = R && (rwById(R.rid) || { kind: 'time', name: R.name });
+      const run = R ? `<div class="inv-run ${R.st}"><div class="inv-rt"><span class="mono dim sm">${R.st === 'run' ? 'RUNNING' : 'PAUSED'}</span><b>${esc(R.name)}</b></div>
+          <div class="inv-rc" data-inv-left>${tcCd(invRunLeft())}</div><div class="gl-bar"><u style="width:${(invRunLeft() / (R.take * 60000) * 100).toFixed(1)}%"></u></div>
+          <div class="sc-btns"><button class="btn sm" data-inv="pause">${R.st === 'run' ? 'PAUSE' : 'RESUME'}</button><button class="btn sm" data-inv="stop">STOP · GIVE THE REST BACK</button></div></div>` : '';
+      const bals = S.rewards.filter(r => r.kind !== 'once' && S.bal[r.id] && (S.bal[r.id].n > 0.01 || (R && R.rid === r.id)));
+      const orphan = Object.keys(S.bal).filter(id => !rwById(id) && S.bal[id].n > 0.01);
+      const card = r => {
+        const b = S.bal[r.id], n = b ? b.n : 0, capL = invCapLeft(r), lim = r.cap ? `<span class="inv-cap">TODAY ${r.kind === 'time' ? `${Math.round(invUsedToday(r.id))} / ${r.cap} MIN` : `${invUsedToday(r.id)} / ${r.cap}`}</span>` : '';
+        const ctl = r.kind === 'count' ? `<button class="btn sm pri" data-inv="use" data-id="${esc(r.id)}" ${n >= 1 && capL >= 1 ? '' : 'disabled'}>USE 1</button>`
+          : `<div class="inv-ch">${[15, 30, 60].filter(m => m < n).map(m => `<button class="btn sm" data-inv="start" data-id="${esc(r.id)}" data-m="${m}" ${R || capL <= 0 ? 'disabled' : ''}>${m < 60 ? m + ' MIN' : '1 H'}</button>`).join('')}<button class="btn sm pri" data-inv="start" data-id="${esc(r.id)}" data-m="${Math.ceil(n)}" ${R || capL <= 0 || n < .5 ? 'disabled' : ''}>USE ${n >= 60 ? 'ALL' : Math.round(n) + ' MIN'}</button></div>`;
+        return `<div class="sc inv-b k-${r.kind}"><span class="sc-kind k-${r.kind}">${r.kind === 'time' ? 'TIME' : 'COUNT'}</span><b>${esc(r.name)}</b><span class="inv-n">${esc(invFmt(r, r.kind === 'time' ? Math.round(n) : Math.floor(n)))}</span>${lim}${ctl}</div>`;
+      };
+      const open = S.inv.filter(x => !x.claimed);
+      const hist = S.log.slice(-30).reverse().map(x => { const r = rwById(x.rid) || { kind: x.k === 'claim' ? 'once' : 'count' }; const v = x.k === 'buy' ? (r.kind === 'time' ? `+${invFmt(r, x.amt)}` : r.kind === 'count' ? `+${x.amt}` : 'BOUGHT') : x.k === 'use' ? (r.kind === 'time' ? `−${invFmt(r, Math.round(x.amt))}` : `−${x.amt}`) : 'CLAIMED';
+        const when = new Date(x.t); return `<div class="inv-h k-${x.k}"><span>${esc(prettyDate(x.d).split(' ').slice(0, 3).join(' '))} · ${pad(when.getHours())}:${pad(when.getMinutes())}</span><b>${esc(x.name)}</b><em>${esc(v)}</em>${x.price ? `<i>−${fmt(x.price)} $</i>` : '<i></i>'}</div>`; }).join('');
+      body.innerHTML = `${run}
+        <div class="inv-sec">BALANCES</div>${bals.length || orphan.length ? bals.map(card).join('') + orphan.map(id => `<div class="sc inv-b"><b>${esc(S.bal[id].name || 'Reward')}</b><span class="inv-n">${Math.round(S.bal[id].n)}</span><span class="dim sm">This reward was removed from the shelf.</span></div>`).join('') : '<div class="dim sm inv-empty">No balances yet. Time and count rewards you buy add up here.</div>'}
+        <div class="inv-sec">READY TO CLAIM</div>${open.length ? open.map(x => `<div class="sc"><span class="sc-kind k-once">ONE-TIME</span><b>${esc(x.name)}</b><span class="dim sm">bought ${esc(x.boughtOn)}</span><div class="sc-btns"><button class="btn sm pri" data-act="claim" data-id="${esc(x.id)}">CLAIM</button></div></div>`).join('') : '<div class="dim sm inv-empty">Nothing waiting. One-time rewards you buy wait here until you claim them.</div>'}
+        <div class="inv-sec">HISTORY</div>${hist ? `<div class="inv-hist">${hist}</div>` : '<div class="dim sm inv-empty">Nothing yet.</div>'}`;
+    }
+  } catch (e) {}
+  return res;
+};
+$('store-body').addEventListener('click', e => {
+  const b = e.target.closest('[data-inv]'); if (!b || b.disabled) return; e.stopPropagation();
+  const k = b.dataset.inv;
+  if (k === 'use') invUseCount(b.dataset.id);
+  else if (k === 'start') invStart(b.dataset.id, +b.dataset.m);
+  else if (k === 'pause') invPause();
+  else if (k === 'stop') confirmBox('Stop the countdown?<br><br>The time that is left goes back into your balance.', 'STOP', () => invStop(false));
+});
+
+/* ── Developer: kind, amount and daily limit per reward ── */
+const _dsInv = devStore;
+devStore = function () {
+  G.store.rewards.forEach(rwNorm);   /* a reward added here gets a kind guessed from its name */
+  const h = _dsInv.apply(this, arguments), t = document.createElement('template'); t.innerHTML = h;
+  t.content.querySelectorAll('.dev-area-item.rw').forEach(row => {
+    const id = (row.querySelector('[data-id]') || {}).dataset; const r = id && rwById(id.id); if (!r) return;
+    const A = `data-id="${esc(r.id)}"`;
+    row.insertAdjacentHTML('afterend', `<div class="rw-kind" ${A}><label>KIND<select data-act="rw-kind" ${A} aria-label="Kind of reward">${RW_KINDS.map(k => `<option value="${k[0]}" ${r.kind === k[0] ? 'selected' : ''}>${k[1]}</option>`).join('')}</select></label>
+      ${r.kind === 'once' ? '<span class="dim sm">Bought, then claimed once.</span>' : `<label>${r.kind === 'time' ? 'MINUTES PER PURCHASE' : 'HOW MANY PER PURCHASE'}<input type="number" min="1" max="${r.kind === 'time' ? 1440 : 100}" value="${r.amt}" data-act="rw-amt" ${A}></label>
+      <label>DAILY LIMIT ${r.kind === 'time' ? '(MIN, 0 = NONE)' : '(0 = NONE)'}<input type="number" min="0" max="${r.kind === 'time' ? 1440 : 100}" value="${r.cap}" data-act="rw-cap" ${A}></label>`}</div>`);
+  });
+  return t.innerHTML.replace('<div class="dim sm" style="margin-bottom:.6rem">Changes, new rewards', '<div class="dim sm" style="margin-bottom:.6rem">Kind, amount and daily limit apply right away. Changes to name and price, new rewards');
+};
+$('dev-overlay').addEventListener('change', e => {
+  const t = e.target.closest('[data-act^="rw-kind"], [data-act="rw-amt"], [data-act="rw-cap"]'); if (!t) return;
+  const r = rwById(t.dataset.id); if (!r) return; e.stopImmediatePropagation();
+  const a = t.dataset.act;
+  if (a === 'rw-kind') { const was = r.kind; r.kind = t.value; if (was !== r.kind) { r.amt = r.kind === 'time' ? 60 : 1; r.cap = 0; } rwNorm(r); }
+  else if (a === 'rw-amt') { r.amt = +t.value; rwNorm(r); t.value = r.amt; }
+  else if (a === 'rw-cap') { r.cap = +t.value; rwNorm(r); t.value = r.cap; }
+  saveState(); if (a === 'rw-kind') renderDevMode(true);
+}, true);
+
+/* ══════════════════════════════════════════════════════
+   v0.16.0  ·  MAP: works like a design tool
+   Select (click, shift-click, drag a box, select all) · copy, cut, paste, duplicate · nudge with arrows ·
+   snap guides · align and spread · connect as a chain or all to one · bring to front, send to back ·
+   text size · a description preview on every shape · a small card that opens next to the shape ·
+   a bar above a group · right-click (or long-press) menu · a shortcut sheet (press ?)
+   ══════════════════════════════════════════════════════ */
+const MP5 = { clip: null, paste: 0, space: false, nudge: null, guides: [], lp: 0 };
+const mpIds = () => MPV.multi.size ? [...MPV.multi] : MPV.sel ? [MPV.sel] : [];
+const mpNodes = () => mpIds().map(mapNode).filter(Boolean);
+const mpMouse = e => e.pointerType === 'mouse';
+/* text size and the description preview survive saving */
+const _cleanV5 = mapClean;
+mapClean = function (b) {
+  const src = new Map(((b && Array.isArray(b.nodes)) ? b.nodes : []).filter(n => n && n.id).map(n => [String(n.id), n])), r = _cleanV5.apply(this, arguments);
+  r.nodes.forEach(n => { const s = src.get(n.id) || {}; const f = +s.fs; if (f && f !== 1) n.fs = clamp(Math.round(f * 100) / 100, .6, 2.4); });
+  return r;
+};
+const _nodeElV5 = mapNodeEl;
+mapNodeEl = function (o) {
+  const el = _nodeElV5.apply(this, arguments);
+  el.style.setProperty('--fs', o.fs || 1);
+  let p = el.querySelector('.mm-dp');
+  if (o.desc && !o.img) { if (!p) { p = document.createElement('div'); p.className = 'mm-dp'; p.setAttribute('aria-hidden', 'true'); el.insertBefore(p, el.querySelector('.mm-h')); } const v = o.desc.replace(/\s+/g, ' ').trim().slice(0, 160); if (p.textContent !== v) p.textContent = v; }
+  else if (p) p.remove();
+  el.classList.toggle('mm-hasdp', !!(o.desc && !o.img)); el.classList.toggle('mm-dp1', (o.h || 70) < 100 * (o.fs || 1));
+  return el;
+};
+
+/* ── selecting ── */
+function mpSelectList(ids, sids) { ids = ids.filter(id => mapNode(id)); if (sids && sids.length) mapSelectMixed(ids, sids); else mapSelectMany(ids); mpUI(); }
+/* shift or ⌘/ctrl click adds or removes a shape */
+$('mm-nodes').addEventListener('pointerdown', e => {
+  const el = e.target.closest('.mm-n'); if (!el || MPV.draw || !(e.shiftKey || e.metaKey || e.ctrlKey) || e.button > 0) return;
+  e.stopImmediatePropagation(); e.preventDefault();
+  const ids = mpIds(), i = ids.indexOf(el.dataset.id); if (i >= 0) ids.splice(i, 1); else ids.push(el.dataset.id);
+  mpSelectList(ids, [...MPV.ss]); sfx('tick');
+}, true);
+/* with a mouse, dragging empty canvas draws a selection box (like a design tool); space + drag, the middle button or two fingers move the map */
+const _viewDownV5 = mapViewDown;
+mapViewDown = function (e) {
+  if (!MPV.draw && mpMouse(e) && e.button === 0 && !MP5.space && !(e.target.closest && e.target.closest('.mm-n')) && !mapPtrs.size) MPV.box = true;
+  if (MP5.space && !MPV.draw) MPV.box = false;
+  return _viewDownV5.apply(this, arguments);
+};
+addEventListener('keydown', e => { if (e.code === 'Space' && curPage === 'pg-map' && !(e.target.matches && e.target.matches('input,textarea,select,[contenteditable=true]'))) { MP5.space = true; $('mm-view').classList.add('mm-spacepan'); e.preventDefault(); } });
+addEventListener('keyup', e => { if (e.code === 'Space') { MP5.space = false; $('mm-view').classList.remove('mm-spacepan'); } });
+addEventListener('blur', () => { MP5.space = false; $('pg-map').classList.remove('mm-shift'); });
+/* holding Shift (or ⌘/Ctrl) to add shapes: the card steps aside so it never covers the shape you want */
+const mpMod = e => { const on = e.shiftKey || e.metaKey || e.ctrlKey; $('pg-map').classList.toggle('mm-shift', on && curPage === 'pg-map'); };
+addEventListener('keydown', mpMod, true); addEventListener('keyup', mpMod, true);
+/* the box selection keeps a reading order (left to right, top to bottom) so CONNECT AS A CHAIN makes sense */
+const _selMixV5 = mapSelectMixed;
+mapSelectMixed = function (nids, sids) {
+  nids = nids.slice().sort((a, b) => { const A = mapNode(a), B = mapNode(b); return Math.abs(A.y - B.y) > 40 ? A.y - B.y : A.x - B.x; });
+  const r = _selMixV5.call(this, nids, sids); mpUI(); return r;
+};
+const _selV5 = mapSelect;
+mapSelect = function (id) { const r = _selV5.apply(this, arguments); mpUI(); return r; };
+const _selManyV5 = mapSelectMany;
+mapSelectMany = function (ids) { const r = _selManyV5.apply(this, arguments); mpUI(); return r; };
+
+/* ── one undo step for a change to the selection ── */
+function mpEdit(fn, keepSel) {
+  const before = mapSnap(); const res = fn(); if (res === false) return;
+  mapRenderAll(); mapCommit(before);
+  if (keepSel) mpSelectList(keepSel.n || [], keepSel.s || []); else mpUI();
+}
+/* ── copy, cut, paste, duplicate ── */
+function mpCopy(silent) {
+  const ids = new Set(mpIds()), sids = new Set(MPV.ss), B = MAPS.board; if (!ids.size && !sids.size) return false;
+  const nodes = B.nodes.filter(n => ids.has(n.id)).map(n => JSON.parse(JSON.stringify(n)));
+  const imgs = {}; nodes.forEach(n => { if (n.img && B.imgs && B.imgs[n.img]) imgs[n.img] = B.imgs[n.img]; });
+  MP5.clip = { nodes, edges: B.edges.filter(e => ids.has(e[0]) && ids.has(e[1])).map(e => e.slice()), strokes: B.strokes.filter(s => sids.has(s.id)).map(mapSClone), imgs };
+  MP5.paste = 0; try { sessionStorage.setItem('life_map_clip', JSON.stringify(MP5.clip)); } catch (e) {}
+  if (!silent) showToast(`COPIED ${nodes.length + MP5.clip.strokes.length}`);
+  return true;
+}
+function mpPaste(clip, off) {
+  clip = clip || MP5.clip; if (!clip) { try { clip = MP5.clip = JSON.parse(sessionStorage.getItem('life_map_clip') || 'null'); } catch (e) {} } if (!clip) return;
+  if (off == null) { MP5.paste++; off = 24 * MP5.paste; }
+  const B = MAPS.board, map = {}, nn = [], ns = [];
+  mpEdit(() => {
+    clip.nodes.forEach(n => { const c = JSON.parse(JSON.stringify(n)); c.id = uid('n'); map[n.id] = c.id; c.x += off; c.y += off; delete c.task; B.nodes.push(c); nn.push(c.id); if (c.img && clip.imgs && clip.imgs[c.img]) { B.imgs = B.imgs || {}; if (!B.imgs[c.img]) B.imgs[c.img] = clip.imgs[c.img]; } });
+    clip.edges.forEach(e => { if (map[e[0]] && map[e[1]]) B.edges.push([map[e[0]], map[e[1]]]); });
+    clip.strokes.forEach(s => { const c = mapSClone(s); c.id = uid('s'); mapSMove(c, s, off, off); B.strokes.push(c); ns.push(c.id); });
+  }, { n: nn, s: ns });
+}
+function mpDuplicate() { const keep = MP5.clip, kp = MP5.paste; if (!mpCopy(true)) return; const c = MP5.clip; MP5.clip = keep; MP5.paste = kp; mpPaste(c, 24); }
+function mpCut() { if (!mpCopy(true)) return; const ids = new Set(mpIds()), sids = new Set(MPV.ss), B = MAPS.board;
+  mpEdit(() => { B.nodes = B.nodes.filter(n => !ids.has(n.id)); B.edges = B.edges.filter(e => !ids.has(e[0]) && !ids.has(e[1])); B.strokes = B.strokes.filter(s => !sids.has(s.id)); MPV.multi.clear(); MPV.sel = null; MPV.ss = new Set(); }, { n: [], s: [] }); showToast('CUT'); }
+/* ── nudge: one undo step for a burst of arrow presses ── */
+function mpNudge(dx, dy) {
+  const ns = mpNodes(), ss = [...MPV.ss].map(mapStroke).filter(Boolean); if (!ns.length && !ss.length) return;
+  if (!MP5.nudge) MP5.nudge = { before: mapSnap(), t: 0 };
+  ns.forEach(n => { n.x += dx; n.y += dy; mapNodeEl(n); mapLinesFor(n.id); });
+  ss.forEach(s => { const o = mapSClone(s); mapSMove(s, o, dx, dy); mapSDraw(s); }); if (ss.length) mapSOverlay();
+  mapTouch(); mpPlace(); clearTimeout(MP5.nudge.t); MP5.nudge.t = setTimeout(() => { const b = MP5.nudge.before; MP5.nudge = null; mapCommit(b); }, 600);
+}
+/* ── connect: as a chain in selection order, or every shape to the first ── */
+function mpConnect(mode) {
+  const ids = mpIds(); if (ids.length < 2) { showToast('SELECT TWO OR MORE SHAPES'); return; }
+  const B = MAPS.board, has = (a, b) => B.edges.some(e => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a));
+  const pairs = mode === 'hub' ? ids.slice(1).map(id => [ids[0], id]) : ids.slice(1).map((id, i) => [ids[i], id]);
+  const add = pairs.filter(p => !has(p[0], p[1])); if (!add.length) { showToast('ALREADY CONNECTED'); return; }
+  mpEdit(() => { add.forEach(p => B.edges.push(p)); }, { n: ids, s: [...MPV.ss] }); showToast(`${add.length} CONNECTION${add.length > 1 ? 'S' : ''}`); sfx('claim');
+}
+/* ── align and spread ── */
+function mpAlign(k) {
+  const ns = mpNodes(); if (ns.length < 2) return;
+  const L = Math.min(...ns.map(n => n.x)), R = Math.max(...ns.map(n => n.x + n.w)), T = Math.min(...ns.map(n => n.y)), Bt = Math.max(...ns.map(n => n.y + n.h));
+  mpEdit(() => {
+    if (k === 'left') ns.forEach(n => n.x = L); else if (k === 'right') ns.forEach(n => n.x = R - n.w); else if (k === 'center') ns.forEach(n => n.x = Math.round((L + R) / 2 - n.w / 2));
+    else if (k === 'top') ns.forEach(n => n.y = T); else if (k === 'bottom') ns.forEach(n => n.y = Bt - n.h); else if (k === 'middle') ns.forEach(n => n.y = Math.round((T + Bt) / 2 - n.h / 2));
+    else if (k === 'hspace' || k === 'vspace') {
+      if (ns.length < 3) { showToast('SPREADING NEEDS THREE OR MORE SHAPES'); return false; }
+      const h = k === 'hspace', s = ns.slice().sort((a, b) => h ? a.x - b.x : a.y - b.y), tot = s.reduce((t, n) => t + (h ? n.w : n.h), 0), span = h ? R - L : Bt - T, gap = (span - tot) / (s.length - 1);
+      let p = h ? L : T; s.forEach(n => { if (h) n.x = Math.round(p); else n.y = Math.round(p); p += (h ? n.w : n.h) + gap; });
+    }
+  }, { n: mpIds(), s: [...MPV.ss] });
+}
+/* ── front and back ── */
+function mpOrder(front) {
+  const ids = new Set(mpIds()); if (!ids.size) return; const B = MAPS.board;
+  mpEdit(() => { const sel = B.nodes.filter(n => ids.has(n.id)), rest = B.nodes.filter(n => !ids.has(n.id)); B.nodes = front ? rest.concat(sel) : sel.concat(rest); $('mm-nodes').textContent = ''; }, { n: mpIds(), s: [...MPV.ss] });
+}
+/* ── text size ── */
+const MP_FS = [['S', .8], ['M', 1], ['L', 1.35], ['XL', 1.8]];
+function mpFont(v, step) {
+  const ns = mpNodes(); if (!ns.length) return;
+  mpEdit(() => { ns.forEach(n => { const f = step ? clamp(Math.round(((n.fs || 1) + step) * 100) / 100, .6, 2.4) : v; if (f === 1) delete n.fs; else n.fs = f; }); }, { n: mpIds(), s: [...MPV.ss] });
+}
+
+/* ── snap guides while dragging one shape ── */
+const _nodeMoveV5 = mapNodeMove;
+mapNodeMove = function (e) {
+  const r = _nodeMoveV5.apply(this, arguments), d = mapDrag;
+  mpGuides([]);
+  if (!d || d.pid !== e.pointerId || !d.moved || d.group || d.resize || e.altKey) { if (d && d.moved) mpPlace(); return r; }
+  const o = mapNode(d.id); if (!o) return r;
+  const k = MAPS.board.view.k, th = 6 / k, xs = [o.x, o.x + o.w / 2, o.x + o.w], ys = [o.y, o.y + o.h / 2, o.y + o.h];
+  let bx = null, by = null;
+  MAPS.board.nodes.forEach(n => { if (n.id === o.id) return; const nx = [n.x, n.x + n.w / 2, n.x + n.w], ny = [n.y, n.y + n.h / 2, n.y + n.h];
+    xs.forEach((x, i) => nx.forEach(v => { const dd = v - x; if (Math.abs(dd) < th && (!bx || Math.abs(dd) < Math.abs(bx.d))) bx = { d: dd, v, n }; }));
+    ys.forEach((y, i) => ny.forEach(v => { const dd = v - y; if (Math.abs(dd) < th && (!by || Math.abs(dd) < Math.abs(by.d))) by = { d: dd, v, n }; })); });
+  const g = [];
+  if (bx) { o.x = Math.round(o.x + bx.d); g.push({ v: true, at: bx.v, a: Math.min(o.y, bx.n.y), b: Math.max(o.y + o.h, bx.n.y + bx.n.h) }); }
+  if (by) { o.y = Math.round(o.y + by.d); g.push({ v: false, at: by.v, a: Math.min(o.x, by.n.x), b: Math.max(o.x + o.w, by.n.x + by.n.w) }); }
+  if (g.length) { const el = document.getElementById('mmn-' + o.id); el.style.left = o.x + 'px'; el.style.top = o.y + 'px'; mapLinesFor(o.id); }
+  mpGuides(g); mpPlace();
+  return r;
+};
+function mpGuides(g) {
+  const w = $('mm-world'); w.querySelectorAll('.mm-guide').forEach(x => x.remove()); if (!g.length) return;
+  const k = MAPS.board.view.k;
+  g.forEach(x => { const el = document.createElement('i'); el.className = 'mm-guide'; el.style.cssText = x.v ? `left:${x.at}px;top:${x.a - 12}px;width:${1 / k}px;height:${x.b - x.a + 24}px` : `top:${x.at}px;left:${x.a - 12}px;height:${1 / k}px;width:${x.b - x.a + 24}px`; w.appendChild(el); });
+}
+const _nodeUpV5 = mapNodeUp;
+mapNodeUp = function (e) { mpGuides([]); const r = _nodeUpV5.apply(this, arguments); mpPlace(); return r; };
+(function () { const n = $('mm-nodes'); n.removeEventListener('pointermove', _nodeMoveV5); n.addEventListener('pointermove', e => mapNodeMove(e)); n.addEventListener('pointercancel', () => mpGuides([])); })();
+
+/* ── the card next to one shape, and the bar above a group ── */
+const MP_ALIGN = [['left', 'Align left', '<path d="M4 3v18M8 7h10M8 15h6"/>'], ['center', 'Align centres', '<path d="M12 3v18M6 7h12M8 15h8"/>'], ['right', 'Align right', '<path d="M20 3v18M6 7h10M10 15h6"/>'],
+  ['top', 'Align top', '<path d="M3 4h18M7 8v10M15 8v6"/>'], ['middle', 'Align middles', '<path d="M3 12h18M7 6v12M15 8v8"/>'], ['bottom', 'Align bottom', '<path d="M3 20h18M7 6v10M15 10v6"/>'],
+  ['hspace', 'Spread across', '<path d="M4 4v16M20 4v16M10 8v8M14 8v8"/>'], ['vspace', 'Spread down', '<path d="M4 4h16M4 20h16M8 10h8M8 14h8"/>']];
+const mpIco = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+(function () {
+  /* the details sheet becomes the card */
+  const det = $('mm-det'); det.classList.add('mm-pop');
+  const head = det.querySelector('.mm-det-head b'); if (head) head.textContent = 'SHAPE';
+  const fsRow = document.createElement('div'); fsRow.className = 'mm-f mm-pfs'; fsRow.innerHTML = `TEXT SIZE<div class="mm-row">${MP_FS.map(f => `<button type="button" data-mp5="fs" data-v="${f[1]}">${f[0]}</button>`).join('')}<button type="button" data-mp5="fs-" aria-label="Smaller text">A−</button><button type="button" data-mp5="fs+" aria-label="Bigger text">A+</button></div>`;
+  const quick = document.createElement('div'); quick.className = 'mm-row mm-pq';
+  quick.innerHTML = `<button type="button" data-mm="connect" aria-pressed="false">CONNECT</button><button type="button" data-mp5="dup">DUPLICATE</button><button type="button" data-mm="img-set">IMAGE</button><button type="button" data-mm="img-del" data-mp5noimg hidden>NO IMAGE</button><button type="button" class="mm-del" data-mm="del">DELETE</button>`;
+  const desc = det.querySelector('#mm-d-desc'); if (desc) desc.rows = 3;
+  const title = det.querySelector('#mm-d-title'); if (title) title.rows = 1;
+  const url = det.querySelector('#mm-d-url'); const urlF = url && url.closest('.mm-f');
+  (urlF || det.lastElementChild).insertAdjacentElement('afterend', fsRow);
+  det.querySelector('.mm-det-head').insertAdjacentElement('afterend', quick);
+  /* mission, idea and life area fold away under MORE */
+  const mis = $('mm-d-mis'); if (mis) { const more = document.createElement('details'); more.className = 'mm-more'; more.innerHTML = '<summary>MISSION, IDEA, LIFE AREA</summary>'; mis.replaceWith(more); more.appendChild(mis); }
+  /* the group bar */
+  const mb = $('mm-multi');
+  mb.innerHTML = `<span class="mm-cnt" id="mm-multi-n">2 SELECTED</span>
+    <div class="mm-mg"><button type="button" data-mp5="menu" data-m="align" aria-haspopup="true" aria-expanded="false" title="Align and spread">${mpIco('<path d="M4 3v18M8 7h10M8 15h6"/>')}<span>ALIGN</span></button>
+      <div class="mm-menu" data-menu="align" hidden>${MP_ALIGN.map(a => `<button type="button" data-mp5="align" data-v="${a[0]}" title="${a[1]}" aria-label="${a[1]}">${mpIco(a[2])}</button>`).join('')}</div></div>
+    <div class="mm-mg"><button type="button" data-mp5="menu" data-m="conn" aria-haspopup="true" aria-expanded="false">${mpIco('<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.3 11l9.4-4M7.3 13l9.4 4"/>')}<span>CONNECT</span></button>
+      <div class="mm-menu mm-menu-t" data-menu="conn" hidden><button type="button" data-mp5="conn" data-v="chain">AS A CHAIN<small>in the order you picked them</small></button><button type="button" data-mp5="conn" data-v="hub">ALL TO THE FIRST<small>the first one you picked</small></button></div></div>
+    <button type="button" data-mp5="fs-" title="Smaller text" aria-label="Smaller text">A−</button><button type="button" data-mp5="fs+" title="Bigger text" aria-label="Bigger text">A+</button>
+    <button type="button" data-mp5="copy">COPY</button><button type="button" data-mp5="dup">DUPLICATE</button>
+    <button type="button" class="mm-del" data-mm="del" aria-label="Delete the selected shapes">DELETE</button><button type="button" data-mm="multi-done" aria-label="Clear the selection">DONE</button>`;
+  /* the right-click menu */
+  const cm = document.createElement('div'); cm.className = 'mm-ctx'; cm.id = 'mm-ctx'; cm.hidden = true; cm.setAttribute('role', 'menu'); $('pg-map').appendChild(cm);
+  /* the shortcut sheet */
+  const ks = document.createElement('div'); ks.className = 'mm-keys'; ks.id = 'mm-keys'; ks.hidden = true; ks.setAttribute('role', 'dialog'); ks.setAttribute('aria-label', 'Map shortcuts');
+  const K = [['Click', 'Select a shape'], ['Shift + click', 'Add to or remove from the selection'], ['Drag on empty space', 'Select with a box'], ['Space + drag, two fingers', 'Move around'], ['⌘/Ctrl + A', 'Select everything'], ['⌘/Ctrl + C · X · V', 'Copy · cut · paste'], ['⌘/Ctrl + D', 'Duplicate'], ['Arrows (Shift = 10)', 'Nudge'], ['Delete', 'Delete'], ['⌘/Ctrl + Z · Shift + Z', 'Undo · redo'], ['⌘/Ctrl + ] · [', 'Bring to front · send to back'], ['⌘/Ctrl + + · −', 'Bigger · smaller text'], ['Hold Alt while dragging', 'No snapping'], ['Double-click', 'Edit the title'], ['Right-click or long-press', 'More actions'], ['Esc', 'Clear the selection'], ['?', 'This sheet']];
+  ks.innerHTML = `<div class="mm-keys-in"><div class="mm-det-head"><b>SHORTCUTS</b><button type="button" class="mm-det-x" data-mp5="keys" aria-label="Close">✕</button></div><dl>${K.map(k => `<dt>${esc(k[0])}</dt><dd>${esc(k[1])}</dd>`).join('')}</dl></div>`;
+  $('pg-map').appendChild(ks);
+  const z = document.querySelector('#pg-map .mm-zoom'); if (z) z.insertAdjacentHTML('beforeend', '<button type="button" data-mp5="keys" aria-label="Keyboard shortcuts" title="Shortcuts (?)">?</button>');
+  const hint = $('mm-hint'); if (hint) hint.textContent = isPhone() ? 'DRAG TO MOVE · PINCH TO ZOOM · TAP A SHAPE · LONG-PRESS FOR MORE' : 'DRAG TO SELECT · SPACE + DRAG OR TWO FINGERS TO MOVE · CLICK A SHAPE · RIGHT-CLICK FOR MORE · ? FOR SHORTCUTS';
+})();
+/* single tap opens the card next to the shape (no dim layer, the map stays usable) */
+let mpClosing = false;
+const _detCloseV5 = mapDetClose;
+mapDetClose = function () { mpClosing = true; try { return _detCloseV5.apply(this, arguments); } finally { mpClosing = false; } };
+$('pg-map').addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-mm4="det-close"]')) { e.stopImmediatePropagation(); mapDetClose(true); } }, true);
+function mpUI() {
+  if (mpClosing) return;
+  mpCtxClose(); const ks = $('mm-keys'); if (ks) ks.hidden = true;
+  const one = MPV.sel && !MPV.multi.size && !MPV.draw && mapNode(MPV.sel);
+  if (one && !mapDetOpen()) { mapDetails(MPV.sel); }
+  if (mapDetOpen()) { $('mm-scrim').hidden = true; $('mm-sel').hidden = true; }
+  if (!one && mapDetOpen()) mapDetClose(false);
+  const o = one && mapNode(MPV.sel);
+  document.querySelectorAll('#mm-det [data-mp5="fs"]').forEach(b => b.classList.toggle('on', !!o && +b.dataset.v === (o.fs || 1)));
+  const ni = document.querySelector('#mm-det [data-mp5noimg]'); if (ni) ni.hidden = !(o && o.img);
+  const mb = $('mm-multi'); if (MPV.multi.size > 1 && !MPV.draw) { mb.hidden = false; $('mm-multi-n').textContent = MPV.multi.size + (MPV.ss.size ? ` + ${MPV.ss.size}` : '') + ' SELECTED'; } else if (!MPV.multi.size) mb.hidden = true;
+  mpMenus(null); mpPlace();
+}
+const _detailsV5 = mapDetails;
+mapDetails = function (id) { const r = _detailsV5.apply(this, arguments); $('mm-scrim').hidden = true; $('mm-sel').hidden = true; mpPlace(); return r; };
+/* do not grab the keyboard on a single click: shortcuts keep working; a double-click edits the title */
+const _focusDet = HTMLElement.prototype.focus;
+let mpNoFocus = true;   /* the card never takes the keyboard by itself: shortcuts keep working; a double-click edits the title */
+$('mm-d-title').focus = function () { if (mpNoFocus) return; return _focusDet.apply(this, arguments); };
+const _nodeUpV5b = mapNodeUp;
+mapNodeUp = function (e) {
+  const d = mapDrag, dbl = d && !d.moved && mapTap && mapTap.id === d.id && performance.now() - mapTap.t < 330;
+  const r = _nodeUpV5b.apply(this, arguments);
+  if (dbl) setTimeout(() => { const t = $('mm-d-title'); if (t && mapDetOpen()) { _focusDet.call(t); t.select(); } }, 0);
+  return r;
+};
+/* place the card beside the shape, and the group bar above the group; both follow pan, zoom and moves */
+function mpPlace() {
+  const vw = $('mm-view'), vr = vw.getBoundingClientRect(), det = $('mm-det');
+  if (mapDetOpen() && MPV.sel) {
+    const el = document.getElementById('mmn-' + MPV.sel);
+    if (el) {
+      const r = el.getBoundingClientRect(), W = det.offsetWidth || 320, H = det.offsetHeight || 300, gap = 14, m = 10, narrow = vr.width < 640, top0 = narrow ? m : m + 56;
+      const nr = { l: r.left - vr.left, t: r.top - vr.top, r: r.right - vr.left, b: r.bottom - vr.top };
+      const fitY = y => Math.max(top0, Math.min(y, vr.height - H - m)), fitX = x => Math.max(m, Math.min(x, vr.width - W - m));
+      /* try every side and keep the one that covers the fewest other shapes */
+      const others = [...document.querySelectorAll('#mm-nodes .mm-n')].filter(e => e !== el).map(e => { const q = e.getBoundingClientRect(); return { l: q.left - vr.left, t: q.top - vr.top, r: q.right - vr.left, b: q.bottom - vr.top }; });
+      const cands = (narrow ? [['b', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.b + gap], ['t', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.t - gap - H]]
+        : [['r', nr.r + gap, nr.t + (nr.b - nr.t) / 2 - Math.min(H, 260) / 2], ['l', nr.l - gap - W, nr.t + (nr.b - nr.t) / 2 - Math.min(H, 260) / 2], ['b', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.b + gap], ['t', nr.l + (nr.r - nr.l) / 2 - W / 2, nr.t - gap - H]])
+        .map(([sd, cx, cy], i) => { const fx = fitX(cx), fy = fitY(cy), box = { l: fx, t: fy, r: fx + W, b: fy + H };
+          const shift = Math.abs(fx - cx) + Math.abs(fy - cy), selfHit = !(box.r <= nr.l || box.l >= nr.r || box.b <= nr.t || box.t >= nr.b);
+          const cover = others.reduce((a, o) => a + Math.max(0, Math.min(box.r, o.r) - Math.max(box.l, o.l)) * Math.max(0, Math.min(box.b, o.b) - Math.max(box.t, o.t)), 0);
+          return { sd, x: fx, y: fy, score: (selfHit ? 1e9 : 0) + cover + shift * 40 + i }; });
+      const best = cands.sort((a, b) => a.score - b.score)[0]; let x = best.x, y = best.y; const side = best.sd;
+      det.style.left = Math.round(x) + 'px'; det.style.top = Math.round(y) + 'px'; det.dataset.side = side;
+      det.classList.toggle('mm-pop-off', r.right < vr.left || r.left > vr.right || r.bottom < vr.top || r.top > vr.bottom);
+      det.classList.toggle('mm-pop-drag', !!(mapDrag && mapDrag.moved));
+    }
+  }
+  const mb = $('mm-multi');
+  if (!mb.hidden && MPV.multi.size > 1) {
+    const els = [...MPV.multi].map(id => document.getElementById('mmn-' + id)).filter(Boolean); if (!els.length) return;
+    const rs = els.map(e => e.getBoundingClientRect()), top = Math.min(...rs.map(r => r.top)) - vr.top, cx = (Math.min(...rs.map(r => r.left)) + Math.max(...rs.map(r => r.right))) / 2 - vr.left;
+    const W = mb.offsetWidth, H = mb.offsetHeight, tb = $('mm-tools'), minTop = tb && !tb.hidden ? tb.getBoundingClientRect().bottom - vr.top + 30 : 64;
+    const bot = Math.max(...rs.map(r => r.bottom)) - vr.top, x = Math.round(Math.max(8 + W / 2, Math.min(vr.width - 8 - W / 2, cx)));
+    /* above the group if there is room, else below; whichever covers fewer shapes */
+    const others = [...document.querySelectorAll('#mm-nodes .mm-n')].map(e => e.getBoundingClientRect());
+    const cover = y => others.reduce((a, q) => a + Math.max(0, Math.min(x + W / 2, q.right - vr.left) - Math.max(x - W / 2, q.left - vr.left)) * Math.max(0, Math.min(y + H, q.bottom - vr.top) - Math.max(y, q.top - vr.top)), 0);
+    const cands = [top - H - 14, bot + 14].map(y => Math.max(minTop, Math.min(vr.height - H - 14, y))).map((y, i) => ({ y, s: cover(y) + i }));
+    const y = cands.sort((a, b) => a.s - b.s)[0].y;
+    mb.style.left = x + 'px'; mb.style.top = Math.round(y) + 'px'; mb.classList.add('mm-float');
+  }
+}
+const _applyV5 = mapApply;
+mapApply = function () { const r = _applyV5.apply(this, arguments); mpPlace(); return r; };
+addEventListener('resize', () => { if (curPage === 'pg-map') mpPlace(); });
+/* menus inside the group bar */
+function mpMenus(which) {
+  document.querySelectorAll('#mm-multi .mm-menu').forEach(m => { const on = m.dataset.menu === which && m.hidden; m.hidden = !on; const b = m.previousElementSibling; if (b) b.setAttribute('aria-expanded', on); });
+}
+/* ── right-click and long-press ── */
+function mpCtx(cx, cy) {
+  const cm = $('mm-ctx'), n = mpIds().length, s = MPV.ss.size, any = n + s > 0, clip = !!(MP5.clip || (() => { try { return sessionStorage.getItem('life_map_clip'); } catch (e) { return null; } })());
+  const it = (a, l, k, on = true, v) => `<button type="button" role="menuitem" data-mp5="${a}" ${v ? `data-v="${v}"` : ''} ${on ? '' : 'disabled'}><span>${l}</span><kbd>${k || ''}</kbd></button>`;
+  const mod = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl+';
+  cm.innerHTML = it('copy', 'Copy', mod + 'C', any) + it('cut', 'Cut', mod + 'X', any) + it('paste', 'Paste', mod + 'V', clip) + it('dup', 'Duplicate', mod + 'D', any) + '<hr>'
+    + (n >= 2 ? it('conn', 'Connect as a chain', '', true, 'chain') + it('conn', 'Connect all to the first', '', true, 'hub') + `<div class="mm-ctx-al">${MP_ALIGN.map(a => `<button type="button" data-mp5="align" data-v="${a[0]}" title="${a[1]}" aria-label="${a[1]}">${mpIco(a[2])}</button>`).join('')}</div><hr>` : '')
+    + it('front', 'Bring to front', mod + ']', n > 0) + it('back', 'Send to back', mod + '[', n > 0) + it('fs+', 'Bigger text', mod + '+', n > 0) + it('fs-', 'Smaller text', mod + '−', n > 0) + '<hr>'
+    + it('all', 'Select all', mod + 'A') + it('del', 'Delete', 'Del', any);
+  cm.hidden = false; $('pg-map').classList.add('mm-ctxon'); const vr = $('pg-map').getBoundingClientRect(), W = cm.offsetWidth, H = cm.offsetHeight;
+  cm.style.left = Math.round(Math.min(cx - vr.left, vr.width - W - 8)) + 'px'; cm.style.top = Math.round(Math.max(8, Math.min(cy - vr.top, vr.height - H - 8))) + 'px';
+  const f = cm.querySelector('button:not([disabled])'); if (f) f.focus({ preventScroll: true });
+}
+const mpCtxClose = () => { const c = $('mm-ctx'); if (c && !c.hidden) c.hidden = true; $('pg-map').classList.remove('mm-ctxon'); };
+$('mm-view').addEventListener('contextmenu', e => {
+  if (MPV.draw) return; e.preventDefault();
+  const el = e.target.closest('.mm-n'); if (el && !mpIds().includes(el.dataset.id)) mapSelect(el.dataset.id);
+  mpCtx(e.clientX, e.clientY);
+});
+/* long-press on a phone */
+$('mm-nodes').addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' || MPV.draw) return; const el = e.target.closest('.mm-n'); if (!el) return;
+  clearTimeout(MP5.lp); const x0 = e.clientX, y0 = e.clientY;
+  MP5.lp = setTimeout(() => { if (mapDrag && mapDrag.moved) return; if (!mpIds().includes(el.dataset.id)) mapSelect(el.dataset.id); try { navigator.vibrate && navigator.vibrate(12); } catch (er) {} mpCtx(x0, y0); }, 550);
+  const cancel = ev => { if (ev.type !== 'pointermove' || Math.hypot(ev.clientX - x0, ev.clientY - y0) > 8) { clearTimeout(MP5.lp); removeEventListener('pointermove', cancel, true); removeEventListener('pointerup', cancel, true); } };
+  addEventListener('pointermove', cancel, true); addEventListener('pointerup', cancel, true);
+});
+document.addEventListener('pointerdown', e => { if (!(e.target.closest && e.target.closest('#mm-ctx'))) mpCtxClose(); if (!(e.target.closest && e.target.closest('#mm-multi'))) mpMenus(null); }, true);
+
+/* ── actions ── */
+function mpAct(a, v) {
+  if (a === 'copy') mpCopy(); else if (a === 'cut') mpCut(); else if (a === 'paste') mpPaste(); else if (a === 'dup') mpDuplicate();
+  else if (a === 'conn') mpConnect(v); else if (a === 'align') mpAlign(v);
+  else if (a === 'front') mpOrder(true); else if (a === 'back') mpOrder(false);
+  else if (a === 'fs') mpFont(+v); else if (a === 'fs+') mpFont(null, .15); else if (a === 'fs-') mpFont(null, -.15);
+  else if (a === 'all') { const B = MAPS.board; mpSelectList(B.nodes.map(n => n.id), B.strokes.map(s => s.id)); }
+  else if (a === 'del') mapDelete();
+  else if (a === 'keys') { const k = $('mm-keys'); k.hidden = !k.hidden; if (!k.hidden) k.querySelector('button').focus(); }
+}
+$('pg-map').addEventListener('click', e => {
+  const b = e.target.closest('[data-mp5]'); if (!b || b.disabled) return; e.stopPropagation();
+  const a = b.dataset.mp5;
+  if (a === 'menu') { mpMenus(b.dataset.m); return; }
+  mpCtxClose(); mpMenus(null); mpAct(a, b.dataset.v);
+});
+$('mm-keys').addEventListener('click', e => { if (e.target === $('mm-keys')) $('mm-keys').hidden = true; });
+addEventListener('keydown', e => {
+  if (curPage !== 'pg-map' || MPV.draw || document.querySelector('.overlay.open,.modal.open')) return;
+  const typing = e.target.matches && e.target.matches('input,textarea,select,[contenteditable=true]'), mod = e.metaKey || e.ctrlKey, k = e.key;
+  if (k === 'Escape') { if (!$('mm-ctx').hidden) { mpCtxClose(); e.preventDefault(); e.stopImmediatePropagation(); return; } if (!$('mm-keys').hidden) { $('mm-keys').hidden = true; e.preventDefault(); e.stopImmediatePropagation(); return; } }
+  if (typing) return;
+  const go = (fn) => { e.preventDefault(); e.stopImmediatePropagation(); fn(); };
+  if (mod && k.toLowerCase() === 'a') go(() => mpAct('all'));
+  else if (mod && k.toLowerCase() === 'c') { if (mpIds().length || MPV.ss.size) go(() => mpCopy()); }
+  else if (mod && k.toLowerCase() === 'x') { if (mpIds().length || MPV.ss.size) go(mpCut); }
+  else if (mod && k.toLowerCase() === 'v') go(() => mpPaste());
+  else if (mod && k.toLowerCase() === 'd') { if (mpIds().length || MPV.ss.size) go(mpDuplicate); else e.preventDefault(); }
+  else if (mod && k === ']') go(() => mpOrder(true)); else if (mod && k === '[') go(() => mpOrder(false));
+  else if (mod && (k === '=' || k === '+')) { if (mpIds().length) go(() => mpFont(null, .15)); }
+  else if (mod && k === '-') { if (mpIds().length) go(() => mpFont(null, -.15)); }
+  else if (!mod && /^Arrow/.test(k) && (mpIds().length || MPV.ss.size)) { const s = e.shiftKey ? 10 : 1; go(() => mpNudge(k === 'ArrowLeft' ? -s : k === 'ArrowRight' ? s : 0, k === 'ArrowUp' ? -s : k === 'ArrowDown' ? s : 0)); }
+  else if (!mod && k === '?') go(() => mpAct('keys'));
+}, true);
+/* the mission form opens the MORE section it lives in */
+const _mfV5 = mapMissionForm;
+mapMissionForm = function () { const m = document.querySelector('#mm-det .mm-more'); if (m) m.open = true; return _mfV5.apply(this, arguments); };
+/* leaving or switching maps closes the extras */
+/* undo and redo keep what you had selected, when it still exists */
+const _undoV5 = mapUndo, _redoV5 = mapRedo;
+const mpKeepSel = fn => function () { const n = mpIds(), ss = [...MPV.ss], r = fn.apply(this, arguments); const nn = n.filter(id => mapNode(id)), s2 = ss.filter(id => mapStroke(id)); if (nn.length || s2.length) mpSelectList(nn, s2); return r; };
+mapUndo = mpKeepSel(_undoV5); mapRedo = mpKeepSel(_redoV5);
+const _leaveV5 = mapLeave;
+mapLeave = function () { mpCtxClose(); mpGuides([]); $('mm-keys').hidden = true; return _leaveV5.apply(this, arguments); };
+
+/* ══════════════════════════════════════════════════════
    PERFORMANCE CHECK
    A live frame meter, and switches that turn one kind of effect off. Nothing here is saved; reloading puts everything back.
    ══════════════════════════════════════════════════════ */
@@ -11176,7 +12508,7 @@ const GUIDE = (() => {
   function setEnabled(on) { enabled = !!on; try { localStorage.setItem(GUIDE_KEY, on ? '1' : '0'); } catch (e) {} apply(); }
   apply();
   const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
-  return { refresh: queueRefresh, apply, setEnabled, setRun, setQuality, setVoice, store, LINES, get enabled() { return enabled; }, get quality() { return qName; },
+  return { say: (l, o) => say(l, o), refresh: queueRefresh, apply, setEnabled, setRun, setQuality, setVoice, store, LINES, get enabled() { return enabled; }, get quality() { return qName; },
     backup: () => JSON.parse(JSON.stringify(store.get())),
     restore(o) { if (o && typeof o === 'object') { store.replace(o); if (store.get().q) setQuality(store.get().q); voiceUI(); if (curPage === 'pg-bubbles') { S = read(); render(); applyModes(); } } },
     debug: () => ({ P, F: Object.fromEntries(CH.map(c => [c, F[c].x])), mood, mix, running, frames, webgl: !!gl && !fallback, fallback, line: full, typing: isTyping, queue: queue.length, skips, quiet, speaking, autoUsed,
@@ -11232,5 +12564,6 @@ setInterval(tick, 250);
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) { addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); }); }
 
 </script>
+<script src="journal.js"></script>
 </body>
 </html>

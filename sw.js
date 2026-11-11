@@ -1,9 +1,9 @@
 /* LIFE service worker. Works offline.
    - index.html, the manifest and the service worker itself: network first, so a new version on GitHub shows up.
    - art.css, art.js and the icons never change between visits: cache first, so they are not downloaded again. */
-const CACHE = 'life-v0.14.2';
-const CORE = ['./', './index.html', './art.css', './art.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './icon.svg'];
-const STATIC = /\/(art\.(css|js)|icon[^/]*\.(png|svg)|apple-touch-icon\.png)$/;
+const CACHE = 'life-v0.17.0';
+const CORE = ['./', './index.html', './art.css', './art.js', './journal.js', './journal.css', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './icon.svg'];
+const STATIC = /\/((art|journal)\.(css|js)|icon[^/]*\.(png|svg)|apple-touch-icon\.png)$/;
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE).catch(() => {})).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 const put = (r, res) => { if (res && (res.ok || res.type === 'opaque')) { const cp = res.clone(); caches.open(CACHE).then(c => c.put(r, cp)).catch(() => {}); } return res; };
